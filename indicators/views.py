@@ -189,3 +189,27 @@ def tactical_charts(request):
                                           'dataset_versatility_technical_actions':dataset_versatility_technical_actions,
                                           'dataset_attack_efficiency':dataset_attack_efficiency,
                                           'dataset_protective_actions':dataset_protective_actions})
+
+def psy_charts(request):
+    if request.method == 'POST':
+        id_user = request.POST.get('user')
+        date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
+        date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
+
+        formdate = ChartForm(request.POST)
+        dataset_date = Indicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
+        dataset_thermometer_test = Indicator.objects.values('thermometer_test').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_second_test = Indicator.objects.values('second_test').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_emotional_stability = Indicator.objects.values('emotional_stability').filter(user=id_user, date__range=[date_start, date_end])
+
+    else:
+        formdate = ChartForm()
+        dataset_date = ['']
+        dataset_thermometer_test = []
+        dataset_second_test = []
+        dataset_emotional_stability = []
+    return render(request, 'psy_charts.html',{'formdate':formdate,
+                                          'dataset_date':dataset_date,
+                                          'dataset_thermometer_test':dataset_thermometer_test,
+                                          'dataset_second_test':dataset_second_test,
+                                          'dataset_emotional_stability':dataset_emotional_stability})

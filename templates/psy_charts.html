@@ -44,10 +44,10 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-              <a class="nav-item nav-link active" href="{% url 'charts' %}">Функциональная подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'charts' %}">Функциональная подготовленность</a>
               <a class="nav-item nav-link" href="{% url 'physical_charts' %}">Физическая подготовленность</a>
               <a class="nav-item nav-link" href="{% url 'tactical_charts' %}">Технико-тактическая подготовленность</a>
-              <a class="nav-item nav-link" href="{% url 'psy_charts' %}">Психологическая подготовленность</a>
+              <a class="nav-item nav-link active" href="{% url 'psy_charts' %}">Психологическая подготовленность</a>
             </div>
           </div>
         </nav>
@@ -55,23 +55,23 @@
 
 <figure class="highcharts-figure">
     <div class="row">
-        <div id="container"></div>
-        <div id="chart_index_of_rufe"></div>
+        <div id="charts_thermometer_test"></div>
+        <div id="chart_second_test"></div>
     </div>
     <div class="row">
-        <div id="chart_coefficient_of_endurance"></div>
+        <div id="chart_emotional_stability"></div>
     </div>
 </figure>
 
 
   <script>
- Highcharts.chart('container', {
+ Highcharts.chart('charts_thermometer_test', {
     chart: {
         width: 600,
         type: 'line',
     },
     title: {
-        text: 'ЧПП'
+        text: 'Тест "Градусник"'
     },
     xAxis: {
         categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
@@ -90,18 +90,18 @@
         }
     },
     series: [{
-        name: 'ЧПП',
-        data: [{% for entry in dataset_pulse_rate %}[{{ entry.pulse_rate }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+        name: 'Тест "Градусник"',
+        data: {% localize off %}[{% for entry in dataset_thermometer_test %}[{{ entry.thermometer_test }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
 
- Highcharts.chart('chart_index_of_rufe', {
+ Highcharts.chart('chart_second_test', {
     chart: {
         width: 600,
         type: 'line',
     },
     title: {
-        text: 'Проба Руффье'
+        text: 'Тест "10 секунд"'
     },
     xAxis: {
         categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
@@ -120,17 +120,17 @@
         }
     },
     series: [{
-        name: 'Проба Руффье',
-        data: [{% for entry in dataset_index_of_rufe %}[{{ entry.index_of_rufe }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+        name: 'Тест "10 секунд"',
+        data: {% localize off %}[{% for entry in dataset_second_test %}[{{ entry.second_test }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
-  Highcharts.chart('chart_coefficient_of_endurance', {
+  Highcharts.chart('chart_emotional_stability', {
     chart: {
         width: 600,
         type: 'line',
     },
     title: {
-        text: 'Коэффициент выносливости'
+        text: 'Коэффициент эмоциональной устойчивости\t'
     },
     xAxis: {
         categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
@@ -149,8 +149,8 @@
         }
     },
     series: [{
-        name: 'Коэффициент выносливости',
-        data: {% localize off %}[{% for entry in dataset_coefficient_of_endurance %}[{{ entry.coefficient_of_endurance }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+        name: 'Коэффициент эмоциональной устойчивости\t',
+        data: {% localize off %}[{% for entry in dataset_emotional_stability %}[{{ entry.emotional_stability }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
   </script>
