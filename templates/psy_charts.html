@@ -29,10 +29,12 @@
                         </div>
                     {% endfor %}
             <div class="btn-group" role="group" aria-label="Third group">
-                <button type="submit" class="btn btn-primary btn-sm">Вывести показатели</button>
-                <button type="submit" class="btn btn-primary btn-sm">Построить графики</button>
-
+                <button type="submit" class="btn btn-primary btn-sm btn-success mr-3">Визуализировать</button>
             </form>
+
+         <form action="{% url 'psy' %}">
+            <button type="submit" class="btn btn-primary btn-sm mr-1" >Построить таблицы</button>
+        </form>
 
         <form action="{% url 'new' %}">
             <button type="submit" class="btn btn-primary btn-sm" >Добавить показатели</button>
