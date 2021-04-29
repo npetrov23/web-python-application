@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
+    {% load l10n %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>Title</title>
@@ -53,7 +54,13 @@
     </div>
 
 <figure class="highcharts-figure">
-    <div id="container"></div>
+    <div class="row">
+        <div id="container"></div>
+        <div id="chart_index_of_rufe"></div>
+    </div>
+    <div class="row">
+        <div id="chart_coefficient_of_endurance"></div>
+    </div>
 </figure>
 
 
@@ -87,7 +94,67 @@
         data: [{% for entry in dataset_pulse_rate %}[{{ entry.pulse_rate }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
     }]
 });
+
+ Highcharts.chart('chart_index_of_rufe', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Проба Руффье'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Проба Руффье',
+        data: [{% for entry in dataset_index_of_rufe %}[{{ entry.index_of_rufe }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+    }]
+});
+  Highcharts.chart('chart_coefficient_of_endurance', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент выносливости'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент выносливости',
+        data: {% localize off %}[{% for entry in dataset_coefficient_of_endurance %}[{{ entry.coefficient_of_endurance }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
   </script>
 
 </body>
 </html>
+
