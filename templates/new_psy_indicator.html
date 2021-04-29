@@ -27,7 +27,11 @@
                 {{ form_new_indicator.as_table }}
                 </tbody>
             </table>
-            <button type="submit" class="save btn btn-default">Сохранить</button>
+            <div class="row">
+            <button type="submit" class="save btn btn-primary btm-sm btn-success mr-1">Сохранить изменения</button>
+        </form>
+        <form action="{% url 'psy' %}">
+            <button type="submit" class="save btn btn-primary btm-sm btn-danger mr-1">Вернуться</button>
         </form>
     </div>
 {% endblock %}
