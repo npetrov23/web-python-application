@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block table_content %}
+    <div class="mx-5 p-1">
+            <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Название показателя</th>
+                      <th scope="col">Результат</th>
+                      <th scope="col">Оценка</th>
+                    </tr>
+                  </thead>
+                <tbody>
+                <tr>
+                  <td scope="row" data-toggle="tooltip" data-placement="bottom" title="Р1 + Р2 + Р3 = Проба Руффье
+
+                   Р1 - пульс за 15 секунд в положении лежа на спине
+                   Р2 - пульс за 15 секунд в положении лежа на спине после 30 приседаний в течении 45 секунд
+                   Р3 - пульс в последние 15 секунд первой минуты восстановительного периода">ЧПП</td>
+                  <td>{{ pulse_rate }}</td>
+                </tr>
+                <tr>
+                  <td scope="row" >Проба Руффье</td>
+                  <td>{{ index_of_rufe }}</td>
+
+                </tr>
+                <tr>
+                  <td scope="row">Коэффициент выносливости</td>
+                  <td >{{ coefficient_of_endurance }}</td>
+                </tr>
+              </tbody>
+            </table>
+    </div>
+{% endblock %}

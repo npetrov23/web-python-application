@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block forms %}
+{% endblock %}
+
+{% block menu %}
+        <p></p>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link active" href="{% url 'new' %}">Функциональная подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'physical_new' %}">Физическая подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'tactical_new' %}">Технико-тактическая подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'psychological_new' %}">Психологическая подготовленность</a>
+            </div>
+          </div>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block table_content %}
+    <div class="mx-5 p-1">
+        <form method="POST" class="post-form">{% csrf_token %}
+            <table class="table table-hover">
+                {{ form_new_indicator.as_table }}
+            </table>
+            <button type="submit" class="save btn btn-default">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}
+

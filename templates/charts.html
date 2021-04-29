@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <div class="mx-5 p-1">
+        <p></p>
+
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            <form method="POST" class="post-form">{% csrf_token %}
+                    {% for field in formdate %}
+                        <div class="fieldWrapper">
+                            {# uncomment to display field errors #}
+                            {# {{ field.errors }} #}
+
+                            {{ field.label_tag }} {{ field }}
+                            <p></p>
+                        </div>
+                    {% endfor %}
+            <div class="btn-group" role="group" aria-label="Third group">
+                <button type="submit" class="btn btn-primary btn-sm">Вывести показатели</button>
+                <button type="submit" class="btn btn-primary btn-sm">Построить графики</button>
+
+            </form>
+
+        <form action="{% url 'new' %}">
+            <button type="submit" class="btn btn-primary btn-sm" >Добавить показатели</button>
+        </form>
+
+        </nav>
+
+        <p></p>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link active" href="#">Функциональная подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'physical' %}">Физическая подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'tactical' %}">Технико-тактическая подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'psy' %}">Психологическая подготовленность</a>
+            </div>
+          </div>
+        </nav>
+    </div>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+</figure>
+
+
+  <script>
+ Highcharts.chart('container', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'ЧПП'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'ЧПП',
+        data: [{% for entry in dataset_pulse_rate %}[{{ entry.pulse_rate }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+    }]
+});
+  </script>
+
+</body>
+</html>
