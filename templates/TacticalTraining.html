@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+    {% block charts_start %}
+    <form action="{% url 'tactical_charts' %}">
+        <button type="submit" class="btn btn-primary btn-sm" >Построить графики</button>
+    </form>
+    {% endblock %}
     {% block menu %}
         <p></p>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">

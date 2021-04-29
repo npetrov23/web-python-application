@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% block charts_start %}
+    <form action="{% url 'charts' %}">
+        <button type="submit" class="btn btn-primary btn-sm" >Построить графики</button>
+    </form>
+{% endblock %}
+
 {% block table_content %}
     <div class="mx-5 p-1">
             <table class="table table-hover">
