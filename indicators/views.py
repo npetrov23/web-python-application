@@ -121,15 +121,24 @@ def psy_indicator(request):
 
 def charts(request):
     if request.method == 'POST':
+        id_user = request.POST.get('user')
         date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
 
         formdate = ChartForm(request.POST)
-        dataset_date = Indicator.objects.values('date').filter(user=request.POST.get('user'),date__range=[date_start, date_end])
-        dataset_pulse_rate = Indicator.objects.values('pulse_rate').filter(user=request.POST.get('user'), date__range=[date_start, date_end])
-        print('REQUEST POST', request.POST)
+        dataset_date = Indicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
+        dataset_pulse_rate = Indicator.objects.values('pulse_rate').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_index_of_rufe = Indicator.objects.values('index_of_rufe').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_coefficient_of_endurance = Indicator.objects.values('coefficient_of_endurance').filter(user=id_user, date__range=[date_start, date_end])
+        print(dataset_coefficient_of_endurance)
     else:
         formdate = ChartForm()
         dataset_date = ['']
         dataset_pulse_rate = []
-    return render(request, 'charts.html',{'formdate':formdate,'dataset_date':dataset_date,'dataset_pulse_rate':dataset_pulse_rate})
+        dataset_index_of_rufe = []
+        dataset_coefficient_of_endurance = []
+    return render(request, 'charts.html',{'formdate':formdate,
+                                          'dataset_date':dataset_date,
+                                          'dataset_pulse_rate':dataset_pulse_rate,
+                                          'dataset_index_of_rufe':dataset_index_of_rufe,
+                                          'dataset_coefficient_of_endurance':dataset_coefficient_of_endurance})
