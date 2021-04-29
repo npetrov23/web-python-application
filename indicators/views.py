@@ -165,3 +165,27 @@ def physical_charts(request):
                                           'dataset_pullups':dataset_pullups,
                                           'dataset_push_ups':dataset_push_ups,
                                           'dataset_sit_up':dataset_sit_up})
+
+def tactical_charts(request):
+    if request.method == 'POST':
+        id_user = request.POST.get('user')
+        date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
+        date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
+
+        formdate = ChartForm(request.POST)
+        dataset_date = Indicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
+        dataset_versatility_technical_actions = Indicator.objects.values('versatility_technical_actions').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_attack_efficiency = Indicator.objects.values('attack_efficiency').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_protective_actions = Indicator.objects.values('protective_actions').filter(user=id_user, date__range=[date_start, date_end])
+        print(dataset_versatility_technical_actions)
+    else:
+        formdate = ChartForm()
+        dataset_date = ['']
+        dataset_versatility_technical_actions = []
+        dataset_attack_efficiency = []
+        dataset_protective_actions = []
+    return render(request, 'tactical_charts.html',{'formdate':formdate,
+                                          'dataset_date':dataset_date,
+                                          'dataset_versatility_technical_actions':dataset_versatility_technical_actions,
+                                          'dataset_attack_efficiency':dataset_attack_efficiency,
+                                          'dataset_protective_actions':dataset_protective_actions})

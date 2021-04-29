@@ -14,4 +14,5 @@ urlpatterns = [
 
     url(r'^charts/$', views.charts, name='charts'),
     url(r'^physical/charts/$', views.physical_charts, name='physical_charts'),
+    url(r'^tactical/charts/$', views.tactical_charts, name='tactical_charts'),
 ]
