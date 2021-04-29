@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^psychological/$', views.psy_indicator, name='psy'),
 
     url(r'^charts/$', views.charts, name='charts'),
-    #url(r'^charts/$', views.charts, name='charts'),
+    url(r'^physical/charts/$', views.physical_charts, name='physical_charts'),
 ]

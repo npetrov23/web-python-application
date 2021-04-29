@@ -142,3 +142,26 @@ def charts(request):
                                           'dataset_pulse_rate':dataset_pulse_rate,
                                           'dataset_index_of_rufe':dataset_index_of_rufe,
                                           'dataset_coefficient_of_endurance':dataset_coefficient_of_endurance})
+
+def physical_charts(request):
+    if request.method == 'POST':
+        id_user = request.POST.get('user')
+        date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
+        date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
+
+        formdate = ChartForm(request.POST)
+        dataset_date = Indicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
+        dataset_pullups = Indicator.objects.values('pullups').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_push_ups = Indicator.objects.values('push_ups').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_sit_up = Indicator.objects.values('sit_up').filter(user=id_user, date__range=[date_start, date_end])
+    else:
+        formdate = ChartForm()
+        dataset_date = ['']
+        dataset_pullups = []
+        dataset_push_ups = []
+        dataset_sit_up = []
+    return render(request, 'physical_charts.html',{'formdate':formdate,
+                                          'dataset_date':dataset_date,
+                                          'dataset_pullups':dataset_pullups,
+                                          'dataset_push_ups':dataset_push_ups,
+                                          'dataset_sit_up':dataset_sit_up})

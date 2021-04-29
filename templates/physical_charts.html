@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    {% load l10n %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <div class="mx-5 p-1">
+        <p></p>
+
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            <form method="POST" class="post-form">{% csrf_token %}
+                    {% for field in formdate %}
+                        <div class="fieldWrapper">
+                            {# uncomment to display field errors #}
+                            {# {{ field.errors }} #}
+
+                            {{ field.label_tag }} {{ field }}
+                            <p></p>
+                        </div>
+                    {% endfor %}
+            <div class="btn-group" role="group" aria-label="Third group">
+                <button type="submit" class="btn btn-primary btn-sm">Вывести показатели</button>
+                <button type="submit" class="btn btn-primary btn-sm">Построить графики</button>
+
+            </form>
+
+        <form action="{% url 'new' %}">
+            <button type="submit" class="btn btn-primary btn-sm" >Добавить показатели</button>
+        </form>
+
+        </nav>
+
+        <p></p>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-item nav-link active" href="#">Функциональная подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'physical' %}">Физическая подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'tactical' %}">Технико-тактическая подготовленность</a>
+              <a class="nav-item nav-link" href="{% url 'psy' %}">Психологическая подготовленность</a>
+            </div>
+          </div>
+        </nav>
+    </div>
+
+<figure class="highcharts-figure">
+    <div class="row">
+        <div id="charts_pullups"></div>
+        <div id="chart_push_ups"></div>
+    </div>
+    <div class="row">
+        <div id="chart_sit_up"></div>
+    </div>
+</figure>
+
+
+  <script>
+ Highcharts.chart('charts_pullups', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Подтягивания'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Подтягивания',
+        data: [{% for entry in dataset_pullups %}[{{ entry.pullups }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+    }]
+});
+
+ Highcharts.chart('chart_push_ups', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Отжимания'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Отжимания',
+        data: [{% for entry in dataset_push_ups %}[{{ entry.push_ups }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+    }]
+});
+  Highcharts.chart('chart_sit_up', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Пресс "Складка"'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Пресс "Складка"',
+        data: [{% for entry in dataset_sit_up %}[{{ entry.sit_up }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+    }]
+});
+  </script>
+
+</body>
+</html>
+
