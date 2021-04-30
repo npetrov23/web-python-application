@@ -47,7 +47,7 @@ class PsyIndicatorForm(forms.ModelForm):
         }
 
 class ChartForm(forms.ModelForm):
-    end_date = forms.DateField(widget = forms.SelectDateWidget)
+    end_date = forms.DateField(widget = forms.SelectDateWidget, label='Конечная дата')
 
     class Meta:
         model = Indicator
@@ -55,4 +55,7 @@ class ChartForm(forms.ModelForm):
         widgets = {
             'date': forms.SelectDateWidget(),
             'end_date': forms.SelectDateWidget()
+        }
+        labels = {
+            'date': ('Начальная дата'),
         }
