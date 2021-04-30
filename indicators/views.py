@@ -38,9 +38,19 @@ def physical_indicator(request):
     pullups = 0
     push_ups = 0
     sit_up = 0
+    long_jump = 0
+    acceleration = 0
+    six_minute_run = 0
+    shuttle_run = 0
+    bridge = 0
+    twine = 0
+    blow_strength = 0
+    endurance = 0
+    flexibility = 0
+    coordination = 0
+    physical_fitness = 0
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
-        #if form.is_valid():
         if Indicator.objects.filter(user=request.POST.get('user')) and \
                 Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
@@ -48,11 +58,33 @@ def physical_indicator(request):
             pullups = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('pullups', flat=True)[0]
             push_ups = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('push_ups', flat=True)[0]
             sit_up = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('sit_up', flat=True)[0]
-        #print('DATA',request.POST.get('date_year')+'-'+request.POST.get('dat_month')+'-'+request.POST.get('date_day'))
+            long_jump = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('long_jump', flat=True)[0]
+            acceleration = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('acceleration', flat=True)[0]
+            six_minute_run = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('six_minute_run', flat=True)[0]
+            shuttle_run = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('shuttle_run', flat=True)[0]
+            bridge = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('bridge', flat=True)[0]
+            twine = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('twine', flat=True)[0]
+            blow_strength = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('blow_strength', flat=True)[0]
+            endurance = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('endurance', flat=True)[0]
+            flexibility = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('flexibility', flat=True)[0]
+            coordination = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('coordination', flat=True)[0]
+            physical_fitness = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('physical_fitness', flat=True)[0]
+
     else:
         form = ChangeSportsmenForm()
 
-    return render(request,'PhysicalTraining.html',{'form':form, 'pullups': pullups, 'push_ups': push_ups, 'sit_up': sit_up})
+    return render(request,'PhysicalTraining.html',{'form':form, 'pullups': pullups, 'push_ups': push_ups, 'sit_up': sit_up,
+                                                   'long_jump':long_jump,
+                                                    'acceleration':acceleration,
+                                                    'six_minute_run':six_minute_run,
+                                                    'shuttle_run':shuttle_run,
+                                                    'bridge':bridge,
+                                                    'twine':twine,
+                                                    'blow_strength':blow_strength,
+                                                    'flexibility': flexibility,
+                                                    'coordination': coordination,
+                                                    'physical_fitness': physical_fitness,
+                                                    'endurance': endurance})
 
 def tactical_indicator(request):
     versatility_technical_actions = 0

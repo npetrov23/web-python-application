@@ -39,7 +39,6 @@ class PhysicalIndicator(models.Model):
     flexibility = models.FloatField(verbose_name='Гибкость (%)',null=True, blank=True, default=0)
     coordination = models.FloatField(verbose_name='Ккс (%)',null=True, blank=True, default=0)
     physical_fitness = models.FloatField(verbose_name='КсФП (%)',null=True, blank=True, default=0)
-    scope_action = models.IntegerField(verbose_name='Отжимания', null=True, blank=True, default=0)
 
     def __str__(self):
         return '{0} ({1})'.format(str(self.user),str(self.date))
