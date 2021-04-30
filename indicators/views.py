@@ -90,9 +90,18 @@ def tactical_indicator(request):
     versatility_technical_actions = 0
     attack_efficiency = 0
     protective_actions = 0
+    warfare_ratio = 0
+    performance_ratio = 0
+    technical_readiness = 0
+    tactical_action = 0
+    versatility_actions = 0
+    chosen_tactics = 0
+    adjustment_factor = 0
+    preparatory_actions = 0
+    situational_actions = 0
+    scope_tactical_action = 0
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
-        #if form.is_valid():
         if Indicator.objects.filter(user=request.POST.get('user')) and \
                 Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
@@ -100,15 +109,40 @@ def tactical_indicator(request):
             versatility_technical_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('versatility_technical_actions', flat=True)[0]
             attack_efficiency = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('attack_efficiency', flat=True)[0]
             protective_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('protective_actions', flat=True)[0]
-        #print('DATA',request.POST.get('date_year')+'-'+request.POST.get('dat_month')+'-'+request.POST.get('date_day'))
+            warfare_ratio = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('warfare_ratio', flat=True)[0]
+            performance_ratio = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('performance_ratio', flat=True)[0]
+            technical_readiness = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('technical_readiness', flat=True)[0]
+            tactical_action = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('tactical_action', flat=True)[0]
+            versatility_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('versatility_actions', flat=True)[0]
+            chosen_tactics = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('chosen_tactics', flat=True)[0]
+            adjustment_factor = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('adjustment_factor', flat=True)[0]
+            preparatory_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('preparatory_actions', flat=True)[0]
+            situational_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('situational_actions', flat=True)[0]
+            scope_tactical_action = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('scope_tactical_action', flat=True)[0]
+
     else:
         form = ChangeSportsmenForm()
-    return render(request,'TacticalTraining.html',{'form':form, 'versatility_technical_actions': versatility_technical_actions, 'attack_efficiency': attack_efficiency, 'protective_actions': protective_actions})
+    return render(request,'TacticalTraining.html',{'form':form,
+                                                   'versatility_technical_actions': versatility_technical_actions,
+                                                   'warfare_ratio': warfare_ratio,
+                                                   'performance_ratio': performance_ratio,
+                                                   'technical_readiness': technical_readiness,
+                                                   'tactical_action': tactical_action,
+                                                   'versatility_actions': versatility_actions,
+                                                   'chosen_tactics': chosen_tactics,
+                                                   'adjustment_factor': adjustment_factor,
+                                                   'preparatory_actions': preparatory_actions,
+                                                   'situational_actions': situational_actions,
+                                                   'attack_efficiency': attack_efficiency,
+                                                   'scope_tactical_action': scope_tactical_action,
+                                                   'protective_actions': protective_actions})
 
 def psy_indicator(request):
     thermometer_test = 0
     second_test = 0
     emotional_stability = 0
+    persistence_ratio = 0
+    courage_ratio = 0
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
         #if form.is_valid():
@@ -119,10 +153,15 @@ def psy_indicator(request):
             thermometer_test = PsyIndicator.objects.filter(date=date,user=id_user).values_list('thermometer_test', flat=True)[0]
             second_test = PsyIndicator.objects.filter(date=date,user=id_user).values_list('second_test', flat=True)[0]
             emotional_stability = PsyIndicator.objects.filter(date=date,user=id_user).values_list('emotional_stability', flat=True)[0]
-        #print('DATA',request.POST.get('date_year')+'-'+request.POST.get('dat_month')+'-'+request.POST.get('date_day'))
+            persistence_ratio = PsyIndicator.objects.filter(date=date,user=id_user).values_list('persistence_ratio', flat=True)[0]
+            courage_ratio = PsyIndicator.objects.filter(date=date,user=id_user).values_list('courage_ratio', flat=True)[0]
     else:
         form = ChangeSportsmenForm()
-    return render(request,'PsychologicalTraining.html',{'form':form, 'thermometer_test': thermometer_test, 'second_test': second_test, 'emotional_stability': emotional_stability})
+    return render(request,'PsychologicalTraining.html',{'form':form, 'thermometer_test': thermometer_test,
+                                                        'second_test': second_test,
+                                                        'persistence_ratio': persistence_ratio,
+                                                        'courage_ratio': courage_ratio,
+                                                        'emotional_stability': emotional_stability})
 
 
 def new_indicator(request):
