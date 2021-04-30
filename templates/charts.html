@@ -55,17 +55,25 @@
           </div>
         </nav>
     </div>
-
-<figure class="highcharts-figure">
-    <div class="row">
-        <div id="container"></div>
-        <div id="chart_index_of_rufe"></div>
-    </div>
-    <div class="row">
-        <div id="chart_coefficient_of_endurance"></div>
-    </div>
-</figure>
-
+<div class="mx-5 p-1">
+    <figure class="highcharts-figure">
+        <div class="row">
+            <div id="container"></div>
+            <div id="chart_index_of_rufe"></div>
+        </div>
+        <div class="row">
+            <div id="chart_coefficient_of_endurance"></div>
+            <div id="chart_blood_circulation"></div>
+        </div>
+        <div class="row">
+            <div id="chart_orthostatic_test"></div>
+            <div id="chart_clinostatic_test"></div>
+        </div>
+        <div class="row">
+            <div id="chart_rosenthal_test"></div>
+        </div>
+    </figure>
+</div>
 
   <script>
  Highcharts.chart('container', {
@@ -156,6 +164,123 @@
         data: {% localize off %}[{% for entry in dataset_coefficient_of_endurance %}[{{ entry.coefficient_of_endurance }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
+    Highcharts.chart('chart_blood_circulation', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент экономичности кровообращения'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент экономичности кровообращения',
+        data: {% localize off %}[{% for entry in dataset_blood_circulation %}[{{ entry.blood_circulation }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+        Highcharts.chart('chart_orthostatic_test', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Ортостатическая проба'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Ортостатическая проба',
+        data: {% localize off %}[{% for entry in dataset_orthostatic_test %}[{{ entry.orthostatic_test }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_clinostatic_test', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Клиностатическая проба'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Клиностатическая проба',
+        data: {% localize off %}[{% for entry in dataset_clinostatic_test %}[{{ entry.clinostatic_test }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_rosenthal_test', {
+    chart: {
+        width: 1200,
+        type: 'line',
+    },
+    title: {
+        text: 'Проба Розенталя'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Проба Розенталя',
+        data: {% localize off %}[{% for entry in dataset_rosenthal_test %}[{{ entry.rosenthal_test }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+
   </script>
 
 </body>

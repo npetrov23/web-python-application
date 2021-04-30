@@ -212,17 +212,28 @@ def charts(request):
         dataset_pulse_rate = Indicator.objects.values('pulse_rate').filter(user=id_user, date__range=[date_start, date_end])
         dataset_index_of_rufe = Indicator.objects.values('index_of_rufe').filter(user=id_user, date__range=[date_start, date_end])
         dataset_coefficient_of_endurance = Indicator.objects.values('coefficient_of_endurance').filter(user=id_user, date__range=[date_start, date_end])
-        print(dataset_coefficient_of_endurance)
+        dataset_blood_circulation = Indicator.objects.values('blood_circulation').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_orthostatic_test = Indicator.objects.values('orthostatic_test').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_clinostatic_test = Indicator.objects.values('clinostatic_test').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_rosenthal_test = Indicator.objects.values('rosenthal_test').filter(user=id_user, date__range=[date_start, date_end])
     else:
         formdate = ChartForm()
         dataset_date = ['']
         dataset_pulse_rate = []
         dataset_index_of_rufe = []
         dataset_coefficient_of_endurance = []
+        dataset_blood_circulation = []
+        dataset_orthostatic_test = []
+        dataset_clinostatic_test = []
+        dataset_rosenthal_test = []
     return render(request, 'charts.html',{'formdate':formdate,
                                           'dataset_date':dataset_date,
                                           'dataset_pulse_rate':dataset_pulse_rate,
                                           'dataset_index_of_rufe':dataset_index_of_rufe,
+                                          'dataset_blood_circulation': dataset_blood_circulation,
+                                          'dataset_orthostatic_test': dataset_orthostatic_test,
+                                          'dataset_clinostatic_test': dataset_clinostatic_test,
+                                          'dataset_rosenthal_test': dataset_rosenthal_test,
                                           'dataset_coefficient_of_endurance':dataset_coefficient_of_endurance})
 
 def physical_charts(request):
