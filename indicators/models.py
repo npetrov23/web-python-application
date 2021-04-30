@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+
 class Indicator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Спортсмен')
     date = models.DateField(verbose_name='Дата норматива',default='2012-04-12')
@@ -16,8 +17,8 @@ class Indicator(models.Model):
         return '{0} ({1})'.format(str(self.user),str(self.date))
 
     class Meta:
-        verbose_name = 'Физиологическая подготовленность'
-        verbose_name_plural = 'Физиологическая подготовленность'
+        verbose_name = 'Функциональная подготовленность'
+        verbose_name_plural = 'Функциональная подготовленность'
         unique_together = (('user','date'))
 
 

@@ -4,15 +4,16 @@ from .forms import IndicatorForm, ChangeSportsmenForm, ChartForm, PhysicalIndica
     TacticalIndicatorForm
 from .models import *
 
-
-
 def change_user(request):
     pulse_rate = 0
     index_of_rufe = 0
     coefficient_of_endurance = 0
+    blood_circulation = 0
+    orthostatic_test = 0
+    clinostatic_test = 0
+    rosenthal_test = 0
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
-        #if form.is_valid():
         if Indicator.objects.filter(user=request.POST.get('user')) and \
                 Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
@@ -20,46 +21,18 @@ def change_user(request):
             pulse_rate = Indicator.objects.filter(date=date,user=id_user).values_list('pulse_rate', flat=True)[0]
             index_of_rufe = Indicator.objects.filter(date=date,user=id_user).values_list('index_of_rufe', flat=True)[0]
             coefficient_of_endurance = Indicator.objects.filter(date=date,user=id_user).values_list('coefficient_of_endurance', flat=True)[0]
-        #print('DATA',request.POST.get('date_year')+'-'+request.POST.get('dat_month')+'-'+request.POST.get('date_day'))
+            blood_circulation = Indicator.objects.filter(date=date,user=id_user).values_list('blood_circulation', flat=True)[0]
+            orthostatic_test = Indicator.objects.filter(date=date,user=id_user).values_list('orthostatic_test', flat=True)[0]
+            clinostatic_test = Indicator.objects.filter(date=date,user=id_user).values_list('clinostatic_test', flat=True)[0]
+            rosenthal_test = Indicator.objects.filter(date=date,user=id_user).values_list('rosenthal_test', flat=True)[0]
+
     else:
         form = ChangeSportsmenForm()
-    return render(request,'index.html',{'form':form, 'pulse_rate': pulse_rate, 'index_of_rufe': index_of_rufe, 'coefficient_of_endurance': coefficient_of_endurance})
-
-def new_indicator(request):
-    if request.method == 'POST':
-        form_new_indicator = IndicatorForm(request.POST)
-        if form_new_indicator.is_valid():
-            form_new_indicator.save()
-    else:
-        form_new_indicator = IndicatorForm()
-    return render(request, 'new_indicator.html', {'form_new_indicator':form_new_indicator})
-
-def new_physical_indicator(request):
-    if request.method == 'POST':
-        form_new_indicator = PhysicalIndicatorForm(request.POST)
-        if form_new_indicator.is_valid():
-            form_new_indicator.save()
-    else:
-        form_new_indicator = PhysicalIndicatorForm()
-    return render(request, 'new_physical_indicator.html', {'form_new_indicator':form_new_indicator})
-
-def new_tactical_indicator(request):
-    if request.method == 'POST':
-        form_new_indicator = TacticalIndicatorForm(request.POST)
-        if form_new_indicator.is_valid():
-            form_new_indicator.save()
-    else:
-        form_new_indicator = TacticalIndicatorForm()
-    return render(request, 'new_tactical_indicator.html', {'form_new_indicator':form_new_indicator})
-
-def new_psy_indicator(request):
-    if request.method == 'POST':
-        form_new_indicator = PsyIndicatorForm(request.POST)
-        if form_new_indicator.is_valid():
-            form_new_indicator.save()
-    else:
-        form_new_indicator = PsyIndicatorForm()
-    return render(request, 'new_psy_indicator.html', {'form_new_indicator':form_new_indicator})
+    return render(request,'index.html',{'form':form, 'pulse_rate': pulse_rate, 'index_of_rufe': index_of_rufe, 'coefficient_of_endurance': coefficient_of_endurance,
+                                        'blood_circulation':blood_circulation,
+                                        'orthostatic_test':orthostatic_test,
+                                        'clinostatic_test':clinostatic_test,
+                                        'rosenthal_test':rosenthal_test})
 
 def physical_indicator(request):
     pullups = 0
@@ -118,6 +91,44 @@ def psy_indicator(request):
     else:
         form = ChangeSportsmenForm()
     return render(request,'PsychologicalTraining.html',{'form':form, 'thermometer_test': thermometer_test, 'second_test': second_test, 'emotional_stability': emotional_stability})
+
+
+def new_indicator(request):
+    if request.method == 'POST':
+        form_new_indicator = IndicatorForm(request.POST)
+        if form_new_indicator.is_valid():
+            form_new_indicator.save()
+    else:
+        form_new_indicator = IndicatorForm()
+    return render(request, 'new_indicator.html', {'form_new_indicator':form_new_indicator})
+
+def new_physical_indicator(request):
+    if request.method == 'POST':
+        form_new_indicator = PhysicalIndicatorForm(request.POST)
+        if form_new_indicator.is_valid():
+            form_new_indicator.save()
+    else:
+        form_new_indicator = PhysicalIndicatorForm()
+    return render(request, 'new_physical_indicator.html', {'form_new_indicator':form_new_indicator})
+
+def new_tactical_indicator(request):
+    if request.method == 'POST':
+        form_new_indicator = TacticalIndicatorForm(request.POST)
+        if form_new_indicator.is_valid():
+            form_new_indicator.save()
+    else:
+        form_new_indicator = TacticalIndicatorForm()
+    return render(request, 'new_tactical_indicator.html', {'form_new_indicator':form_new_indicator})
+
+def new_psy_indicator(request):
+    if request.method == 'POST':
+        form_new_indicator = PsyIndicatorForm(request.POST)
+        if form_new_indicator.is_valid():
+            form_new_indicator.save()
+    else:
+        form_new_indicator = PsyIndicatorForm()
+    return render(request, 'new_psy_indicator.html', {'form_new_indicator':form_new_indicator})
+
 
 def charts(request):
     if request.method == 'POST':
