@@ -359,15 +359,20 @@ def psy_charts(request):
         dataset_thermometer_test = PsyIndicator.objects.values('thermometer_test').filter(user=id_user, date__range=[date_start, date_end])
         dataset_second_test = PsyIndicator.objects.values('second_test').filter(user=id_user, date__range=[date_start, date_end])
         dataset_emotional_stability = PsyIndicator.objects.values('emotional_stability').filter(user=id_user, date__range=[date_start, date_end])
-
+        dataset_persistence_ratio = PsyIndicator.objects.values('persistence_ratio').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_courage_ratio = PsyIndicator.objects.values('courage_ratio').filter(user=id_user, date__range=[date_start, date_end])
     else:
         formdate = ChartForm()
         dataset_date = ['']
         dataset_thermometer_test = []
         dataset_second_test = []
         dataset_emotional_stability = []
+        dataset_persistence_ratio = []
+        dataset_courage_ratio = []
     return render(request, 'psy_charts.html',{'formdate':formdate,
                                           'dataset_date':dataset_date,
                                           'dataset_thermometer_test':dataset_thermometer_test,
                                           'dataset_second_test':dataset_second_test,
+                                          'dataset_persistence_ratio': dataset_persistence_ratio,
+                                          'dataset_courage_ratio': dataset_courage_ratio,
                                           'dataset_emotional_stability':dataset_emotional_stability})

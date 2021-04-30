@@ -63,6 +63,26 @@
     </div>
     <div class="row">
         <div id="chart_protective_actions"></div>
+        <div id="chart_warfare_ratio"></div>
+    </div>
+    <div class="row">
+        <div id="chart_performance_ratio"></div>
+        <div id="chart_technical_readiness"></div>
+    </div>
+    <div class="row">
+        <div id="chart_tactical_action"></div>
+        <div id="chart_versatility_actions"></div>
+    </div>
+    <div class="row">
+        <div id="chart_chosen_tactics"></div>
+        <div id="chart_adjustment_factor"></div>
+    </div>
+    <div class="row">
+        <div id="chart_preparatory_actions"></div>
+        <div id="chart_situational_actions"></div>
+    </div>
+    <div class="row">
+        <div id="chart_scope_tactical_action"></div>
     </div>
 </figure>
 
@@ -154,6 +174,296 @@
     series: [{
         name: 'Коэффициент эффективности защитных действий',
         data: [{% for entry in dataset_protective_actions %}[{{ entry.protective_actions }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+    }]
+});
+Highcharts.chart('chart_warfare_ratio', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент эффективности боевых действий'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент эффективности боевых действий',
+        data: {% localize off %}[{% for entry in dataset_warfare_ratio %}[{{ entry.warfare_ratio }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_performance_ratio', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент результативности'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент результативности',
+        data: {% localize off %}[{% for entry in dataset_performance_ratio %}[{{ entry.performance_ratio }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_technical_readiness', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Техническая подготовленность'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Техническая подготовленность',
+        data: {% localize off %}[{% for entry in dataset_technical_readiness %}[{{ entry.technical_readiness }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_tactical_action', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Тактическая подготовленность'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Тактическая подготовленность',
+        data: {% localize off %}[{% for entry in dataset_tactical_action %}[{{ entry.tactical_action }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_versatility_actions', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Разносторонность тактических действий'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Разносторонность тактических действий',
+        data: {% localize off %}[{% for entry in dataset_versatility_actions %}[{{ entry.versatility_actions }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_chosen_tactics', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент избранной тактики'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент избранной тактики',
+        data: {% localize off %}[{% for entry in dataset_chosen_tactics %}[{{ entry.chosen_tactics }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_adjustment_factor', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент перестройки тактики'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент перестройки тактики',
+        data: {% localize off %}[{% for entry in dataset_adjustment_factor %}[{{ entry.adjustment_factor }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_preparatory_actions', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент подготовительных тактических действий'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент подготовительных тактических действий',
+        data: {% localize off %}[{% for entry in dataset_preparatory_actions %}[{{ entry.preparatory_actions }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_situational_actions', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент ситуативных тактических действий'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент ситуативных тактических действий',
+        data: {% localize off %}[{% for entry in dataset_situational_actions %}[{{ entry.situational_actions }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_scope_tactical_action', {
+    chart: {
+        width: 1200,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент объема тактических действий'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент объема тактических действий',
+        data: {% localize off %}[{% for entry in dataset_scope_tactical_action %}[{{ entry.scope_tactical_action }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
   </script>
