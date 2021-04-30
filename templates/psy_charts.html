@@ -55,7 +55,7 @@
           </div>
         </nav>
     </div>
-
+<div class="mx-5 p-1">
 <figure class="highcharts-figure">
     <div class="row">
         <div id="charts_thermometer_test"></div>
@@ -63,9 +63,13 @@
     </div>
     <div class="row">
         <div id="chart_emotional_stability"></div>
+        <div id="chart_persistence_ratio"></div>
+    </div>
+    <div class="row">
+        <div id="chart_courage_ratio"></div>
     </div>
 </figure>
-
+</div>
 
   <script>
  Highcharts.chart('charts_thermometer_test', {
@@ -154,6 +158,93 @@
     series: [{
         name: 'Коэффициент эмоциональной устойчивости\t',
         data: {% localize off %}[{% for entry in dataset_emotional_stability %}[{{ entry.emotional_stability }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+    Highcharts.chart('chart_emotional_stability', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент эмоциональной устойчивости\t'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент эмоциональной устойчивости\t',
+        data: {% localize off %}[{% for entry in dataset_emotional_stability %}[{{ entry.emotional_stability }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+    Highcharts.chart('chart_persistence_ratio', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент настойчивости'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент настойчивости',
+        data: {% localize off %}[{% for entry in dataset_persistence_ratio %}[{{ entry.persistence_ratio }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_courage_ratio', {
+    chart: {
+        width: 1200,
+        type: 'line',
+    },
+    title: {
+        text: 'Коэффициент смелости'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Коэффициент смелости',
+        data: {% localize off %}[{% for entry in dataset_courage_ratio %}[{{ entry.courage_ratio }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
   </script>

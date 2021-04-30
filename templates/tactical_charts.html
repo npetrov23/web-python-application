@@ -55,7 +55,7 @@
           </div>
         </nav>
     </div>
-
+<div class="mx-5 p-1">
 <figure class="highcharts-figure">
     <div class="row">
         <div id="charts_versatility_technical_actions"></div>
@@ -85,7 +85,7 @@
         <div id="chart_scope_tactical_action"></div>
     </div>
 </figure>
-
+</div>
 
   <script>
  Highcharts.chart('charts_versatility_technical_actions', {
@@ -437,35 +437,7 @@ Highcharts.chart('chart_situational_actions', {
         data: {% localize off %}[{% for entry in dataset_situational_actions %}[{{ entry.situational_actions }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
-Highcharts.chart('chart_scope_tactical_action', {
-    chart: {
-        width: 1200,
-        type: 'line',
-    },
-    title: {
-        text: 'Коэффициент объема тактических действий'
-    },
-    xAxis: {
-        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
-    },
-    yAxis: {
-        title: {
-            text: 'Значение'
-        }
-    },
-    plotOptions: {
-        line: {
-            dataLabels: {
-                enabled: true
-            },
-            enableMouseTracking: false
-        }
-    },
-    series: [{
-        name: 'Коэффициент объема тактических действий',
-        data: {% localize off %}[{% for entry in dataset_scope_tactical_action %}[{{ entry.scope_tactical_action }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
-    }]
-});
+
   </script>
 
 </body>
