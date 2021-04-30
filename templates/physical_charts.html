@@ -63,6 +63,27 @@
     </div>
     <div class="row">
         <div id="chart_sit_up"></div>
+        <div id="chart_long_jump"></div>
+    </div>
+    <div class="row">
+        <div id="chart_acceleration"></div>
+        <div id="chart_six_minute_run"></div>
+    </div>
+    <div class="row">
+        <div id="chart_shuttle_run"></div>
+        <div id="chart_bridge"></div>
+    </div>
+    <div class="row">
+        <div id="chart_twine"></div>
+        <div id="chart_blow_strength"></div>
+    </div>
+    <div class="row">
+        <div id="chart_endurance"></div>
+        <div id="chart_flexibility"></div>
+    </div>
+    <div class="row">
+        <div id="chart_coordination"></div>
+        <div id="chart_physical_fitness"></div>
     </div>
 </figure>
 
@@ -154,6 +175,325 @@
     series: [{
         name: 'Пресс "Складка"',
         data: [{% for entry in dataset_sit_up %}[{{ entry.sit_up }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+    }]
+});
+Highcharts.chart('chart_long_jump', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Прыжок в длину с места'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Прыжок в длину с места',
+        data: {% localize off %}[{% for entry in dataset_long_jump %}[{{ entry.long_jump }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_acceleration', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Ускорение 100м (c)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Ускорение 100м (c)',
+        data: {% localize off %}[{% for entry in dataset_acceleration %}[{{ entry.acceleration }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_six_minute_run', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: '6-ти минутный бег (м)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: '6-ти минутный бег (м)',
+        data: {% localize off %}[{% for entry in dataset_six_minute_run %}[{{ entry.six_minute_run }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_shuttle_run', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Челночный бег 4х9м (с)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Челночный бег 4х9м (с)',
+        data: {% localize off %}[{% for entry in dataset_shuttle_run %}[{{ entry.shuttle_run }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_bridge', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: '"Мостик" (см)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: '"Мостик" (см)',
+        data: {% localize off %}[{% for entry in dataset_bridge %}[{{ entry.bridge }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_twine', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: '"Шпагат" (см)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: '"Шпагат" (см)',
+        data: {% localize off %}[{% for entry in dataset_twine %}[{{ entry.twine }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_blow_strength', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Сила ударов (%)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Сила ударов (%)',
+        data: {% localize off %}[{% for entry in dataset_blow_strength %}[{{ entry.blow_strength }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_endurance', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Выносливость (%)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Выносливость (%)',
+        data: {% localize off %}[{% for entry in dataset_endurance %}[{{ entry.endurance }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_flexibility', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Гибкость (%)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Гибкость (%)',
+        data: {% localize off %}[{% for entry in dataset_flexibility %}[{{ entry.flexibility }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_coordination', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'Ккс (%)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Ккс (%)',
+        data: {% localize off %}[{% for entry in dataset_coordination %}[{{ entry.coordination }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
+    }]
+});
+Highcharts.chart('chart_physical_fitness', {
+    chart: {
+        width: 600,
+        type: 'line',
+    },
+    title: {
+        text: 'КсФП (%)'
+    },
+    xAxis: {
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+    },
+    yAxis: {
+        title: {
+            text: 'Значение'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'КсФП (%)',
+        data: {% localize off %}[{% for entry in dataset_physical_fitness %}[{{ entry.physical_fitness }}]{% if not forloop.last %}, {% endif %}{% endfor %}]{% endlocalize %}
     }]
 });
   </script>
