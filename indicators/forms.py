@@ -1,4 +1,4 @@
-from .models import Indicator
+from .models import *
 from django import forms
 
 
@@ -22,7 +22,7 @@ class IndicatorForm(forms.ModelForm):
 
 class PhysicalIndicatorForm(forms.ModelForm):
     class Meta:
-        model = Indicator
+        model = PhysicalIndicator
         fields = ('user','date','pullups','push_ups','sit_up')
         widgets = {
             'date': forms.SelectDateWidget()
@@ -31,7 +31,7 @@ class PhysicalIndicatorForm(forms.ModelForm):
 
 class TacticalIndicatorForm(forms.ModelForm):
     class Meta:
-        model = Indicator
+        model = TacticaIndicator
         fields = ('user','date','versatility_technical_actions','attack_efficiency','protective_actions')
         widgets = {
             'date': forms.SelectDateWidget()
@@ -40,7 +40,7 @@ class TacticalIndicatorForm(forms.ModelForm):
 
 class PsyIndicatorForm(forms.ModelForm):
     class Meta:
-        model = Indicator
+        model = PsyIndicator
         fields = ('user','date','thermometer_test','second_test','emotional_stability')
         widgets = {
             'date': forms.SelectDateWidget()

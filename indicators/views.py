@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from .forms import IndicatorForm, ChangeSportsmenForm, ChartForm, PhysicalIndicatorForm, PsyIndicatorForm, \
     TacticalIndicatorForm
-from .models import Indicator
+from .models import *
 
 
 
@@ -72,9 +72,9 @@ def physical_indicator(request):
                 Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
             date = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))#Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
-            pullups = Indicator.objects.filter(date=date,user=id_user).values_list('pullups', flat=True)[0]
-            push_ups = Indicator.objects.filter(date=date,user=id_user).values_list('push_ups', flat=True)[0]
-            sit_up = Indicator.objects.filter(date=date,user=id_user).values_list('sit_up', flat=True)[0]
+            pullups = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('pullups', flat=True)[0]
+            push_ups = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('push_ups', flat=True)[0]
+            sit_up = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('sit_up', flat=True)[0]
         #print('DATA',request.POST.get('date_year')+'-'+request.POST.get('dat_month')+'-'+request.POST.get('date_day'))
     else:
         form = ChangeSportsmenForm()
@@ -92,9 +92,9 @@ def tactical_indicator(request):
                 Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
             date = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))#Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
-            versatility_technical_actions = Indicator.objects.filter(date=date,user=id_user).values_list('versatility_technical_actions', flat=True)[0]
-            attack_efficiency = Indicator.objects.filter(date=date,user=id_user).values_list('attack_efficiency', flat=True)[0]
-            protective_actions = Indicator.objects.filter(date=date,user=id_user).values_list('protective_actions', flat=True)[0]
+            versatility_technical_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('versatility_technical_actions', flat=True)[0]
+            attack_efficiency = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('attack_efficiency', flat=True)[0]
+            protective_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('protective_actions', flat=True)[0]
         #print('DATA',request.POST.get('date_year')+'-'+request.POST.get('dat_month')+'-'+request.POST.get('date_day'))
     else:
         form = ChangeSportsmenForm()
@@ -111,9 +111,9 @@ def psy_indicator(request):
                 Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
             date = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))#Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
-            thermometer_test = Indicator.objects.filter(date=date,user=id_user).values_list('thermometer_test', flat=True)[0]
-            second_test = Indicator.objects.filter(date=date,user=id_user).values_list('second_test', flat=True)[0]
-            emotional_stability = Indicator.objects.filter(date=date,user=id_user).values_list('emotional_stability', flat=True)[0]
+            thermometer_test = PsyIndicator.objects.filter(date=date,user=id_user).values_list('thermometer_test', flat=True)[0]
+            second_test = PsyIndicator.objects.filter(date=date,user=id_user).values_list('second_test', flat=True)[0]
+            emotional_stability = PsyIndicator.objects.filter(date=date,user=id_user).values_list('emotional_stability', flat=True)[0]
         #print('DATA',request.POST.get('date_year')+'-'+request.POST.get('dat_month')+'-'+request.POST.get('date_day'))
     else:
         form = ChangeSportsmenForm()
@@ -150,10 +150,10 @@ def physical_charts(request):
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
 
         formdate = ChartForm(request.POST)
-        dataset_date = Indicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
-        dataset_pullups = Indicator.objects.values('pullups').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_push_ups = Indicator.objects.values('push_ups').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_sit_up = Indicator.objects.values('sit_up').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_date = PhysicalIndicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
+        dataset_pullups = PhysicalIndicator.objects.values('pullups').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_push_ups = PhysicalIndicator.objects.values('push_ups').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_sit_up = PhysicalIndicator.objects.values('sit_up').filter(user=id_user, date__range=[date_start, date_end])
     else:
         formdate = ChartForm()
         dataset_date = ['']
@@ -173,11 +173,10 @@ def tactical_charts(request):
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
 
         formdate = ChartForm(request.POST)
-        dataset_date = Indicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
-        dataset_versatility_technical_actions = Indicator.objects.values('versatility_technical_actions').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_attack_efficiency = Indicator.objects.values('attack_efficiency').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_protective_actions = Indicator.objects.values('protective_actions').filter(user=id_user, date__range=[date_start, date_end])
-        print(dataset_versatility_technical_actions)
+        dataset_date = TacticaIndicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
+        dataset_versatility_technical_actions = TacticaIndicator.objects.values('versatility_technical_actions').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_attack_efficiency = TacticaIndicator.objects.values('attack_efficiency').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_protective_actions = TacticaIndicator.objects.values('protective_actions').filter(user=id_user, date__range=[date_start, date_end])
     else:
         formdate = ChartForm()
         dataset_date = ['']
@@ -197,10 +196,10 @@ def psy_charts(request):
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
 
         formdate = ChartForm(request.POST)
-        dataset_date = Indicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
-        dataset_thermometer_test = Indicator.objects.values('thermometer_test').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_second_test = Indicator.objects.values('second_test').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_emotional_stability = Indicator.objects.values('emotional_stability').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_date = PsyIndicator.objects.values('date').filter(user=id_user,date__range=[date_start, date_end])
+        dataset_thermometer_test = PsyIndicator.objects.values('thermometer_test').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_second_test = PsyIndicator.objects.values('second_test').filter(user=id_user, date__range=[date_start, date_end])
+        dataset_emotional_stability = PsyIndicator.objects.values('emotional_stability').filter(user=id_user, date__range=[date_start, date_end])
 
     else:
         formdate = ChartForm()
