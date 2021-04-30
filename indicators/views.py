@@ -51,8 +51,8 @@ def physical_indicator(request):
     physical_fitness = 0
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
-        if Indicator.objects.filter(user=request.POST.get('user')) and \
-                Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
+        if PhysicalIndicator.objects.filter(user=request.POST.get('user')) and \
+                PhysicalIndicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
             date = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))#Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
             pullups = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('pullups', flat=True)[0]
@@ -69,7 +69,6 @@ def physical_indicator(request):
             flexibility = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('flexibility', flat=True)[0]
             coordination = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('coordination', flat=True)[0]
             physical_fitness = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('physical_fitness', flat=True)[0]
-
     else:
         form = ChangeSportsmenForm()
 
@@ -102,8 +101,8 @@ def tactical_indicator(request):
     scope_tactical_action = 0
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
-        if Indicator.objects.filter(user=request.POST.get('user')) and \
-                Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
+        if TacticaIndicator.objects.filter(user=request.POST.get('user')) and \
+                TacticaIndicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
             date = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))#Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
             versatility_technical_actions = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('versatility_technical_actions', flat=True)[0]
@@ -146,8 +145,8 @@ def psy_indicator(request):
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
         #if form.is_valid():
-        if Indicator.objects.filter(user=request.POST.get('user')) and \
-                Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
+        if PsyIndicator.objects.filter(user=request.POST.get('user')) and \
+                PsyIndicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
             date = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))#Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
             thermometer_test = PsyIndicator.objects.filter(date=date,user=id_user).values_list('thermometer_test', flat=True)[0]
