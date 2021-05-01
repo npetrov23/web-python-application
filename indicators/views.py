@@ -12,8 +12,10 @@ def change_user(request):
     orthostatic_test = 0
     clinostatic_test = 0
     rosenthal_test = 0
+    post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
+        request.session['post_request'] = request.POST
         if Indicator.objects.filter(user=request.POST.get('user')) and \
                 Indicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
@@ -27,8 +29,8 @@ def change_user(request):
             rosenthal_test = Indicator.objects.filter(date=date,user=id_user).values_list('rosenthal_test', flat=True)[0]
 
     else:
-        form = ChangeSportsmenForm()
-    return render(request,'index.html',{'form':form, 'pulse_rate': pulse_rate, 'index_of_rufe': index_of_rufe, 'coefficient_of_endurance': coefficient_of_endurance,
+        form = ChangeSportsmenForm(post_request)
+    return render(request, 'table/index.html', {'form':form, 'pulse_rate': pulse_rate, 'index_of_rufe': index_of_rufe, 'coefficient_of_endurance': coefficient_of_endurance,
                                         'blood_circulation':blood_circulation,
                                         'orthostatic_test':orthostatic_test,
                                         'clinostatic_test':clinostatic_test,
@@ -49,8 +51,10 @@ def physical_indicator(request):
     flexibility = 0
     coordination = 0
     physical_fitness = 0
+    post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
+        request.session['post_request'] = request.POST
         if PhysicalIndicator.objects.filter(user=request.POST.get('user')) and \
                 PhysicalIndicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
@@ -70,9 +74,9 @@ def physical_indicator(request):
             coordination = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('coordination', flat=True)[0]
             physical_fitness = PhysicalIndicator.objects.filter(date=date,user=id_user).values_list('physical_fitness', flat=True)[0]
     else:
-        form = ChangeSportsmenForm()
+        form = ChangeSportsmenForm(post_request)
 
-    return render(request,'PhysicalTraining.html',{'form':form, 'pullups': pullups, 'push_ups': push_ups, 'sit_up': sit_up,
+    return render(request, 'table/PhysicalTraining.html', {'form':form, 'pullups': pullups, 'push_ups': push_ups, 'sit_up': sit_up,
                                                    'long_jump':long_jump,
                                                     'acceleration':acceleration,
                                                     'six_minute_run':six_minute_run,
@@ -83,7 +87,7 @@ def physical_indicator(request):
                                                     'flexibility': flexibility,
                                                     'coordination': coordination,
                                                     'physical_fitness': physical_fitness,
-                                                    'endurance': endurance})
+                                                           'endurance': endurance})
 
 def tactical_indicator(request):
     versatility_technical_actions = 0
@@ -99,8 +103,10 @@ def tactical_indicator(request):
     preparatory_actions = 0
     situational_actions = 0
     scope_tactical_action = 0
+    post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
+        request.session['post_request'] = request.POST
         if TacticaIndicator.objects.filter(user=request.POST.get('user')) and \
                 TacticaIndicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
             id_user = request.POST.get('user')
@@ -120,8 +126,8 @@ def tactical_indicator(request):
             scope_tactical_action = TacticaIndicator.objects.filter(date=date,user=id_user).values_list('scope_tactical_action', flat=True)[0]
 
     else:
-        form = ChangeSportsmenForm()
-    return render(request,'TacticalTraining.html',{'form':form,
+        form = ChangeSportsmenForm(post_request)
+    return render(request, 'table/TacticalTraining.html', {'form':form,
                                                    'versatility_technical_actions': versatility_technical_actions,
                                                    'warfare_ratio': warfare_ratio,
                                                    'performance_ratio': performance_ratio,
@@ -132,9 +138,9 @@ def tactical_indicator(request):
                                                    'adjustment_factor': adjustment_factor,
                                                    'preparatory_actions': preparatory_actions,
                                                    'situational_actions': situational_actions,
-                                                   'attack_efficiency': attack_efficiency,
-                                                   'scope_tactical_action': scope_tactical_action,
-                                                   'protective_actions': protective_actions})
+                                                           'attack_efficiency': attack_efficiency,
+                                                           'scope_tactical_action': scope_tactical_action,
+                                                           'protective_actions': protective_actions})
 
 def psy_indicator(request):
     thermometer_test = 0
@@ -142,8 +148,10 @@ def psy_indicator(request):
     emotional_stability = 0
     persistence_ratio = 0
     courage_ratio = 0
+    post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
+        request.session['post_request'] = request.POST
         #if form.is_valid():
         if PsyIndicator.objects.filter(user=request.POST.get('user')) and \
                 PsyIndicator.objects.filter(date=str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))):
@@ -155,8 +163,8 @@ def psy_indicator(request):
             persistence_ratio = PsyIndicator.objects.filter(date=date,user=id_user).values_list('persistence_ratio', flat=True)[0]
             courage_ratio = PsyIndicator.objects.filter(date=date,user=id_user).values_list('courage_ratio', flat=True)[0]
     else:
-        form = ChangeSportsmenForm()
-    return render(request,'PsychologicalTraining.html',{'form':form, 'thermometer_test': thermometer_test,
+        form = ChangeSportsmenForm(post_request)
+    return render(request, 'table/PsychologicalTraining.html', {'form':form, 'thermometer_test': thermometer_test,
                                                         'second_test': second_test,
                                                         'persistence_ratio': persistence_ratio,
                                                         'courage_ratio': courage_ratio,
@@ -170,7 +178,7 @@ def new_indicator(request):
             form_new_indicator.save()
     else:
         form_new_indicator = IndicatorForm()
-    return render(request, 'new_indicator.html', {'form_new_indicator':form_new_indicator})
+    return render(request, 'add_indicator/new_indicator.html', {'form_new_indicator':form_new_indicator})
 
 def new_physical_indicator(request):
     if request.method == 'POST':
@@ -179,29 +187,33 @@ def new_physical_indicator(request):
             form_new_indicator.save()
     else:
         form_new_indicator = PhysicalIndicatorForm()
-    return render(request, 'new_physical_indicator.html', {'form_new_indicator':form_new_indicator})
+    return render(request, 'add_indicator/new_physical_indicator.html', {'form_new_indicator':form_new_indicator})
 
 def new_tactical_indicator(request):
     if request.method == 'POST':
         form_new_indicator = TacticalIndicatorForm(request.POST)
+        request.session['post_request'] = request.POST
         if form_new_indicator.is_valid():
             form_new_indicator.save()
     else:
         form_new_indicator = TacticalIndicatorForm()
-    return render(request, 'new_tactical_indicator.html', {'form_new_indicator':form_new_indicator})
+    return render(request, 'add_indicator/new_tactical_indicator.html', {'form_new_indicator':form_new_indicator})
 
 def new_psy_indicator(request):
     if request.method == 'POST':
         form_new_indicator = PsyIndicatorForm(request.POST)
+        request.session['post_request'] = request.POST
         if form_new_indicator.is_valid():
             form_new_indicator.save()
     else:
         form_new_indicator = PsyIndicatorForm()
-    return render(request, 'new_psy_indicator.html', {'form_new_indicator':form_new_indicator})
+    return render(request, 'add_indicator/new_psy_indicator.html', {'form_new_indicator':form_new_indicator})
 
 
 def charts(request):
+    post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
+        request.session['post_request_chart'] = request.POST
         id_user = request.POST.get('user')
         date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
@@ -216,7 +228,7 @@ def charts(request):
         dataset_clinostatic_test = Indicator.objects.values('clinostatic_test').filter(user=id_user, date__range=[date_start, date_end])
         dataset_rosenthal_test = Indicator.objects.values('rosenthal_test').filter(user=id_user, date__range=[date_start, date_end])
     else:
-        formdate = ChartForm()
+        formdate = ChartForm(post_request_chart)
         dataset_date = ['']
         dataset_pulse_rate = []
         dataset_index_of_rufe = []
@@ -225,7 +237,7 @@ def charts(request):
         dataset_orthostatic_test = []
         dataset_clinostatic_test = []
         dataset_rosenthal_test = []
-    return render(request, 'charts.html',{'formdate':formdate,
+    return render(request, 'charts/charts.html', {'formdate':formdate,
                                           'dataset_date':dataset_date,
                                           'dataset_pulse_rate':dataset_pulse_rate,
                                           'dataset_index_of_rufe':dataset_index_of_rufe,
@@ -236,7 +248,9 @@ def charts(request):
                                           'dataset_coefficient_of_endurance':dataset_coefficient_of_endurance})
 
 def physical_charts(request):
+    post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
+        request.session['post_request_chart'] = request.POST
         id_user = request.POST.get('user')
         date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
@@ -258,7 +272,7 @@ def physical_charts(request):
         dataset_coordination = PhysicalIndicator.objects.values('coordination').filter(user=id_user,date__range=[date_start, date_end])
         dataset_physical_fitness = PhysicalIndicator.objects.values('physical_fitness').filter(user=id_user,date__range=[date_start, date_end])
     else:
-        formdate = ChartForm()
+        formdate = ChartForm(post_request_chart)
         dataset_date = ['']
         dataset_pullups = []
         dataset_push_ups = []
@@ -275,7 +289,7 @@ def physical_charts(request):
         dataset_coordination = []
         dataset_physical_fitness = []
 
-    return render(request, 'physical_charts.html',{'formdate':formdate,
+    return render(request, 'charts/physical_charts.html', {'formdate':formdate,
                                           'dataset_date':dataset_date,
                                           'dataset_pullups':dataset_pullups,
                                           'dataset_push_ups':dataset_push_ups,
@@ -286,14 +300,16 @@ def physical_charts(request):
                                           'dataset_bridge': dataset_bridge,
                                           'dataset_twine': dataset_twine,
                                           'dataset_blow_strength': dataset_blow_strength,
-                                          'dataset_endurance': dataset_endurance,
-                                          'dataset_flexibility': dataset_flexibility,
-                                          'dataset_coordination': dataset_coordination,
-                                          'dataset_physical_fitness': dataset_physical_fitness,
-                                          'dataset_sit_up':dataset_sit_up})
+                                                           'dataset_endurance': dataset_endurance,
+                                                           'dataset_flexibility': dataset_flexibility,
+                                                           'dataset_coordination': dataset_coordination,
+                                                           'dataset_physical_fitness': dataset_physical_fitness,
+                                                           'dataset_sit_up':dataset_sit_up})
 
 def tactical_charts(request):
+    post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
+        request.session['post_request_chart'] = request.POST
         id_user = request.POST.get('user')
         date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
@@ -316,7 +332,7 @@ def tactical_charts(request):
         dataset_scope_tactical_action = TacticaIndicator.objects.values('scope_tactical_action').filter(user=id_user, date__range=[date_start, date_end])
 
     else:
-        formdate = ChartForm()
+        formdate = ChartForm(post_request_chart)
         dataset_date = ['']
         dataset_versatility_technical_actions = []
         dataset_attack_efficiency = []
@@ -331,7 +347,7 @@ def tactical_charts(request):
         dataset_preparatory_actions = []
         dataset_situational_actions = []
         dataset_scope_tactical_action = []
-    return render(request, 'tactical_charts.html',{'formdate':formdate,
+    return render(request, 'charts/tactical_charts.html', {'formdate':formdate,
                                           'dataset_date':dataset_date,
                                           'dataset_versatility_technical_actions':dataset_versatility_technical_actions,
                                           'dataset_attack_efficiency':dataset_attack_efficiency,
@@ -342,13 +358,15 @@ def tactical_charts(request):
                                           'dataset_versatility_actions': dataset_versatility_actions,
                                           'dataset_chosen_tactics': dataset_chosen_tactics,
                                           'dataset_adjustment_factor': dataset_adjustment_factor,
-                                          'dataset_preparatory_actions': dataset_preparatory_actions,
-                                          'dataset_situational_actions': dataset_situational_actions,
-                                          'dataset_scope_tactical_action': dataset_scope_tactical_action,
-                                          'dataset_protective_actions':dataset_protective_actions})
+                                                           'dataset_preparatory_actions': dataset_preparatory_actions,
+                                                           'dataset_situational_actions': dataset_situational_actions,
+                                                           'dataset_scope_tactical_action': dataset_scope_tactical_action,
+                                                           'dataset_protective_actions':dataset_protective_actions})
 
 def psy_charts(request):
+    post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
+        request.session['post_request_chart'] = request.POST
         id_user = request.POST.get('user')
         date_start = str(request.POST.get('date_year'))+'-'+str(request.POST.get('date_month'))+'-'+str(request.POST.get('date_day'))
         date_end = str(request.POST.get('end_date_year'))+'-'+str(request.POST.get('end_date_month'))+'-'+str(request.POST.get('end_date_day'))
@@ -361,14 +379,14 @@ def psy_charts(request):
         dataset_persistence_ratio = PsyIndicator.objects.values('persistence_ratio').filter(user=id_user, date__range=[date_start, date_end])
         dataset_courage_ratio = PsyIndicator.objects.values('courage_ratio').filter(user=id_user, date__range=[date_start, date_end])
     else:
-        formdate = ChartForm()
+        formdate = ChartForm(post_request_chart)
         dataset_date = ['']
         dataset_thermometer_test = []
         dataset_second_test = []
         dataset_emotional_stability = []
         dataset_persistence_ratio = []
         dataset_courage_ratio = []
-    return render(request, 'psy_charts.html',{'formdate':formdate,
+    return render(request, 'charts/psy_charts.html', {'formdate':formdate,
                                           'dataset_date':dataset_date,
                                           'dataset_thermometer_test':dataset_thermometer_test,
                                           'dataset_second_test':dataset_second_test,
