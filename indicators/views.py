@@ -39,31 +39,17 @@ def change_user(request):
     else:
         form = ChangeSportsmenForm(post_request)
     return render(request, 'table/index.html', {'form': form,
-                                                        'pulse_rate': 'Норматив не указан',
-                                                        'index_of_rufe': 'Норматив не указан',
-                                                        'coefficient_of_endurance': 'Норматив не указан',
-                                                        'blood_circulation': 'Норматив не указан',
-                                                        'orthostatic_test': 'Норматив не указан',
-                                                        'clinostatic_test': 'Норматив не указан',
-                                                        'rosenthal_test': 'Норматив не указан'})
+                                                'pulse_rate': 'Норматив не указан',
+                                                'index_of_rufe': 'Норматив не указан',
+                                                'coefficient_of_endurance': 'Норматив не указан',
+                                                'blood_circulation': 'Норматив не указан',
+                                                'orthostatic_test': 'Норматив не указан',
+                                                'clinostatic_test': 'Норматив не указан',
+                                                'rosenthal_test': 'Норматив не указан'})
 
 
 @login_required
 def physical_indicator(request):
-    pullups = 0
-    push_ups = 0
-    sit_up = 0
-    long_jump = 0
-    acceleration = 0
-    six_minute_run = 0
-    shuttle_run = 0
-    bridge = 0
-    twine = 0
-    blow_strength = 0
-    endurance = 0
-    flexibility = 0
-    coordination = 0
-    physical_fitness = 0
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
@@ -72,47 +58,45 @@ def physical_indicator(request):
                 PhysicalIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
                         request.POST.get('date_day'))):
-            id_user = request.POST.get('user')
-            date = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-                request.POST.get(
-                    'date_day'))  # Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
-            pullups = PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('pullups', flat=True)[0]
-            push_ups = PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('push_ups', flat=True)[0]
-            sit_up = PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('sit_up', flat=True)[0]
-            long_jump = PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('long_jump', flat=True)[0]
-            acceleration = \
-            PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('acceleration', flat=True)[0]
-            six_minute_run = \
-            PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('six_minute_run', flat=True)[0]
-            shuttle_run = \
-            PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('shuttle_run', flat=True)[0]
-            bridge = PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('bridge', flat=True)[0]
-            twine = PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('twine', flat=True)[0]
-            blow_strength = \
-            PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('blow_strength', flat=True)[0]
-            endurance = PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('endurance', flat=True)[0]
-            flexibility = \
-            PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('flexibility', flat=True)[0]
-            coordination = \
-            PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('coordination', flat=True)[0]
-            physical_fitness = \
-            PhysicalIndicator.objects.filter(date=date, user=id_user).values_list('physical_fitness', flat=True)[0]
+            physical_indicators_tuple = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
+                                                   'sit_up', 'long_jump', 'acceleration', 'six_minute_run', 'shuttle_run',
+                                                   'bridge', 'twine', 'blow_strength', 'flexibility',
+                                                   'coordination', 'physical_fitness', 'endurance')
+
+            return render(request, 'table/PhysicalTraining.html',
+                          {'form': form, 'pullups': physical_indicators_tuple[0],
+                           'push_ups': physical_indicators_tuple[1],
+                           'sit_up': physical_indicators_tuple[2],
+                           'long_jump': physical_indicators_tuple[3],
+                           'acceleration': physical_indicators_tuple[4],
+                           'six_minute_run': physical_indicators_tuple[5],
+                           'shuttle_run': physical_indicators_tuple[6],
+                           'bridge': physical_indicators_tuple[7],
+                           'twine': physical_indicators_tuple[8],
+                           'blow_strength': physical_indicators_tuple[9],
+                           'flexibility': physical_indicators_tuple[10],
+                           'coordination': physical_indicators_tuple[11],
+                           'physical_fitness': physical_indicators_tuple[12],
+                           'endurance': physical_indicators_tuple[13]})
     else:
         form = ChangeSportsmenForm(post_request)
 
     return render(request, 'table/PhysicalTraining.html',
-                  {'form': form, 'pullups': pullups, 'push_ups': push_ups, 'sit_up': sit_up,
-                   'long_jump': long_jump,
-                   'acceleration': acceleration,
-                   'six_minute_run': six_minute_run,
-                   'shuttle_run': shuttle_run,
-                   'bridge': bridge,
-                   'twine': twine,
-                   'blow_strength': blow_strength,
-                   'flexibility': flexibility,
-                   'coordination': coordination,
-                   'physical_fitness': physical_fitness,
-                   'endurance': endurance})
+                  {'form': form,
+                   'pullups': 'Норматив не указан',
+                   'push_ups': 'Норматив не указан',
+                   'sit_up': 'Норматив не указан',
+                   'long_jump': 'Норматив не указан',
+                   'acceleration': 'Норматив не указан',
+                   'six_minute_run': 'Норматив не указан',
+                   'shuttle_run': 'Норматив не указан',
+                   'bridge': 'Норматив не указан',
+                   'twine': 'Норматив не указан',
+                   'blow_strength': 'Норматив не указан',
+                   'flexibility': 'Норматив не указан',
+                   'coordination': 'Норматив не указан',
+                   'physical_fitness': 'Норматив не указан',
+                   'endurance': 'Норматив не указан'})
 
 
 @login_required
@@ -143,32 +127,37 @@ def tactical_indicator(request):
                 request.POST.get(
                     'date_day'))  # Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
             versatility_technical_actions = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('versatility_technical_actions',
-                                                                                 flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('versatility_technical_actions',
+                                                                                     flat=True)[0]
             attack_efficiency = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('attack_efficiency', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('attack_efficiency', flat=True)[0]
             protective_actions = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('protective_actions', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('protective_actions', flat=True)[0]
             warfare_ratio = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('warfare_ratio', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('warfare_ratio', flat=True)[0]
             performance_ratio = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('performance_ratio', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('performance_ratio', flat=True)[0]
             technical_readiness = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('technical_readiness', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('technical_readiness', flat=True)[
+                    0]
             tactical_action = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('tactical_action', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('tactical_action', flat=True)[0]
             versatility_actions = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('versatility_actions', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('versatility_actions', flat=True)[
+                    0]
             chosen_tactics = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('chosen_tactics', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('chosen_tactics', flat=True)[0]
             adjustment_factor = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('adjustment_factor', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('adjustment_factor', flat=True)[0]
             preparatory_actions = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('preparatory_actions', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('preparatory_actions', flat=True)[
+                    0]
             situational_actions = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('situational_actions', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('situational_actions', flat=True)[
+                    0]
             scope_tactical_action = \
-            TacticaIndicator.objects.filter(date=date, user=id_user).values_list('scope_tactical_action', flat=True)[0]
+                TacticaIndicator.objects.filter(date=date, user=id_user).values_list('scope_tactical_action',
+                                                                                     flat=True)[0]
 
     else:
         form = ChangeSportsmenForm(post_request)
@@ -209,14 +198,14 @@ def psy_indicator(request):
                 request.POST.get(
                     'date_day'))  # Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
             thermometer_test = \
-            PsyIndicator.objects.filter(date=date, user=id_user).values_list('thermometer_test', flat=True)[0]
+                PsyIndicator.objects.filter(date=date, user=id_user).values_list('thermometer_test', flat=True)[0]
             second_test = PsyIndicator.objects.filter(date=date, user=id_user).values_list('second_test', flat=True)[0]
             emotional_stability = \
-            PsyIndicator.objects.filter(date=date, user=id_user).values_list('emotional_stability', flat=True)[0]
+                PsyIndicator.objects.filter(date=date, user=id_user).values_list('emotional_stability', flat=True)[0]
             persistence_ratio = \
-            PsyIndicator.objects.filter(date=date, user=id_user).values_list('persistence_ratio', flat=True)[0]
+                PsyIndicator.objects.filter(date=date, user=id_user).values_list('persistence_ratio', flat=True)[0]
             courage_ratio = \
-            PsyIndicator.objects.filter(date=date, user=id_user).values_list('courage_ratio', flat=True)[0]
+                PsyIndicator.objects.filter(date=date, user=id_user).values_list('courage_ratio', flat=True)[0]
     else:
         form = ChangeSportsmenForm(post_request)
     return render(request, 'table/PsychologicalTraining.html', {'form': form, 'thermometer_test': thermometer_test,
