@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('indicators/', include('indicators.urls')),
     path('', RedirectView.as_view(url='/indicators/')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

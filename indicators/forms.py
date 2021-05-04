@@ -1,5 +1,9 @@
+
+
 from .models import *
 from django import forms
+from datetime import date
+
 
 
 class ChangeSportsmenForm(forms.ModelForm):
@@ -47,14 +51,13 @@ class PsyIndicatorForm(forms.ModelForm):
         }
 
 class ChartForm(forms.ModelForm):
-    end_date = forms.DateField(widget = forms.SelectDateWidget, label='Конечная дата')
+    end_date = forms.DateField(widget = forms.SelectDateWidget, label='Конечная дата', initial=date.today)
 
     class Meta:
         model = Indicator
         fields = ('user', 'date')
         widgets = {
-            'date': forms.SelectDateWidget(),
-            'end_date': forms.SelectDateWidget()
+            'date': forms.SelectDateWidget()
         }
         labels = {
             'date': ('Начальная дата'),

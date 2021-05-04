@@ -17,7 +17,7 @@
         <nav class="navbar navbar-light bg-light justify-content-between">
             <form method="POST" class="post-form">{% csrf_token %}
                     {% for field in form %}
-                        <div class="fieldWrapper">
+                            <div class="fieldWrapper">
                             {# uncomment to display field errors #}
                             {# {{ field.errors }} #}
 
@@ -34,10 +34,12 @@
             <button type="submit" class="btn btn-primary btn-sm" >Построить графики</button>
         </form>
         {% endblock %}
-
-        <form action="{% url 'new' %}">
+        {% if perms.catalog.can_add_func_indicator %}
+            <form action="{% url 'new' %}">
             <button type="submit" class="btn btn-primary btn-sm" ><i class="fas fa-plus"></i> Добавить показатели</button>
         </form>
+        {% endif %}
+
 
         </nav>
     {% endblock %}

@@ -1,9 +1,11 @@
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .forms import IndicatorForm, ChangeSportsmenForm, ChartForm, PhysicalIndicatorForm, PsyIndicatorForm, \
     TacticalIndicatorForm
 from .models import *
 
+
+@login_required
 def change_user(request):
     pulse_rate = 0
     index_of_rufe = 0
@@ -27,7 +29,6 @@ def change_user(request):
             orthostatic_test = Indicator.objects.filter(date=date,user=id_user).values_list('orthostatic_test', flat=True)[0]
             clinostatic_test = Indicator.objects.filter(date=date,user=id_user).values_list('clinostatic_test', flat=True)[0]
             rosenthal_test = Indicator.objects.filter(date=date,user=id_user).values_list('rosenthal_test', flat=True)[0]
-
     else:
         form = ChangeSportsmenForm(post_request)
     return render(request, 'table/index.html', {'form':form, 'pulse_rate': pulse_rate, 'index_of_rufe': index_of_rufe, 'coefficient_of_endurance': coefficient_of_endurance,
@@ -36,6 +37,7 @@ def change_user(request):
                                         'clinostatic_test':clinostatic_test,
                                         'rosenthal_test':rosenthal_test})
 
+@login_required
 def physical_indicator(request):
     pullups = 0
     push_ups = 0
@@ -89,6 +91,7 @@ def physical_indicator(request):
                                                     'physical_fitness': physical_fitness,
                                                            'endurance': endurance})
 
+@login_required
 def tactical_indicator(request):
     versatility_technical_actions = 0
     attack_efficiency = 0
@@ -142,6 +145,7 @@ def tactical_indicator(request):
                                                            'scope_tactical_action': scope_tactical_action,
                                                            'protective_actions': protective_actions})
 
+@login_required
 def psy_indicator(request):
     thermometer_test = 0
     second_test = 0
@@ -171,6 +175,7 @@ def psy_indicator(request):
                                                         'emotional_stability': emotional_stability})
 
 
+@login_required
 def new_indicator(request):
     if request.method == 'POST':
         form_new_indicator = IndicatorForm(request.POST)
@@ -180,6 +185,7 @@ def new_indicator(request):
         form_new_indicator = IndicatorForm()
     return render(request, 'add_indicator/new_indicator.html', {'form_new_indicator':form_new_indicator})
 
+@login_required
 def new_physical_indicator(request):
     if request.method == 'POST':
         form_new_indicator = PhysicalIndicatorForm(request.POST)
@@ -189,6 +195,7 @@ def new_physical_indicator(request):
         form_new_indicator = PhysicalIndicatorForm()
     return render(request, 'add_indicator/new_physical_indicator.html', {'form_new_indicator':form_new_indicator})
 
+@login_required
 def new_tactical_indicator(request):
     if request.method == 'POST':
         form_new_indicator = TacticalIndicatorForm(request.POST)
@@ -199,6 +206,7 @@ def new_tactical_indicator(request):
         form_new_indicator = TacticalIndicatorForm()
     return render(request, 'add_indicator/new_tactical_indicator.html', {'form_new_indicator':form_new_indicator})
 
+@login_required
 def new_psy_indicator(request):
     if request.method == 'POST':
         form_new_indicator = PsyIndicatorForm(request.POST)
@@ -209,7 +217,7 @@ def new_psy_indicator(request):
         form_new_indicator = PsyIndicatorForm()
     return render(request, 'add_indicator/new_psy_indicator.html', {'form_new_indicator':form_new_indicator})
 
-
+@login_required
 def charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
@@ -247,6 +255,7 @@ def charts(request):
                                           'dataset_rosenthal_test': dataset_rosenthal_test,
                                           'dataset_coefficient_of_endurance':dataset_coefficient_of_endurance})
 
+@login_required
 def physical_charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
@@ -305,7 +314,7 @@ def physical_charts(request):
                                                            'dataset_coordination': dataset_coordination,
                                                            'dataset_physical_fitness': dataset_physical_fitness,
                                                            'dataset_sit_up':dataset_sit_up})
-
+@login_required
 def tactical_charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
@@ -363,6 +372,7 @@ def tactical_charts(request):
                                                            'dataset_scope_tactical_action': dataset_scope_tactical_action,
                                                            'dataset_protective_actions':dataset_protective_actions})
 
+@login_required
 def psy_charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
