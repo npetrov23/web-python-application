@@ -59,7 +59,8 @@ def physical_indicator(request):
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
                         request.POST.get('date_day'))):
             physical_indicators_tuple = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
-                                                   'sit_up', 'long_jump', 'acceleration', 'six_minute_run', 'shuttle_run',
+                                                   'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
+                                                   'shuttle_run',
                                                    'bridge', 'twine', 'blow_strength', 'flexibility',
                                                    'coordination', 'physical_fitness', 'endurance')
 
@@ -109,13 +110,15 @@ def tactical_indicator(request):
                 TacticaIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
                         request.POST.get('date_day'))):
-            tactical_indicators_tuple = get_result(TacticaIndicator, request, 'versatility_technical_actions', 'warfare_ratio',
+            tactical_indicators_tuple = get_result(TacticaIndicator, request, 'versatility_technical_actions',
+                                                   'warfare_ratio',
                                                    'performance_ratio', 'technical_readiness', 'tactical_action',
                                                    'versatility_actions', 'chosen_tactics', 'adjustment_factor',
                                                    'preparatory_actions', 'situational_actions', 'attack_efficiency',
                                                    'scope_tactical_action', 'protective_actions')
             return render(request, 'table/TacticalTraining.html', {'form': form,
-                                                                   'versatility_technical_actions': tactical_indicators_tuple[0],
+                                                                   'versatility_technical_actions':
+                                                                       tactical_indicators_tuple[0],
                                                                    'warfare_ratio': tactical_indicators_tuple[1],
                                                                    'performance_ratio': tactical_indicators_tuple[2],
                                                                    'technical_readiness': tactical_indicators_tuple[3],
@@ -126,7 +129,8 @@ def tactical_indicator(request):
                                                                    'preparatory_actions': tactical_indicators_tuple[8],
                                                                    'situational_actions': tactical_indicators_tuple[9],
                                                                    'attack_efficiency': tactical_indicators_tuple[10],
-                                                                   'scope_tactical_action': tactical_indicators_tuple[11],
+                                                                   'scope_tactical_action': tactical_indicators_tuple[
+                                                                       11],
                                                                    'protective_actions': tactical_indicators_tuple[12]})
 
     else:
@@ -149,40 +153,29 @@ def tactical_indicator(request):
 
 @login_required
 def psy_indicator(request):
-    thermometer_test = 0
-    second_test = 0
-    emotional_stability = 0
-    persistence_ratio = 0
-    courage_ratio = 0
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         form = ChangeSportsmenForm(request.POST)
         request.session['post_request'] = request.POST
-        # if form.is_valid():
         if PsyIndicator.objects.filter(user=request.POST.get('user')) and \
                 PsyIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
                         request.POST.get('date_day'))):
-            id_user = request.POST.get('user')
-            date = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-                request.POST.get(
-                    'date_day'))  # Indicator.objects.filter(date=request.POST.get('date')).values_list('date', flat=True)[0]
-            thermometer_test = \
-                PsyIndicator.objects.filter(date=date, user=id_user).values_list('thermometer_test', flat=True)[0]
-            second_test = PsyIndicator.objects.filter(date=date, user=id_user).values_list('second_test', flat=True)[0]
-            emotional_stability = \
-                PsyIndicator.objects.filter(date=date, user=id_user).values_list('emotional_stability', flat=True)[0]
-            persistence_ratio = \
-                PsyIndicator.objects.filter(date=date, user=id_user).values_list('persistence_ratio', flat=True)[0]
-            courage_ratio = \
-                PsyIndicator.objects.filter(date=date, user=id_user).values_list('courage_ratio', flat=True)[0]
+            psy_indicators_tuple = get_result(PsyIndicator, request, 'thermometer_test', 'second_test',
+                                              'persistence_ratio', 'courage_ratio', 'emotional_stability')
+            return render(request, 'table/PsychologicalTraining.html',
+                          {'form': form, 'thermometer_test': psy_indicators_tuple[0],
+                           'second_test': psy_indicators_tuple[1],
+                           'persistence_ratio': psy_indicators_tuple[2],
+                           'courage_ratio': psy_indicators_tuple[3],
+                           'emotional_stability': psy_indicators_tuple[4]})
     else:
         form = ChangeSportsmenForm(post_request)
-    return render(request, 'table/PsychologicalTraining.html', {'form': form, 'thermometer_test': thermometer_test,
-                                                                'second_test': second_test,
-                                                                'persistence_ratio': persistence_ratio,
-                                                                'courage_ratio': courage_ratio,
-                                                                'emotional_stability': emotional_stability})
+    return render(request, 'table/PsychologicalTraining.html', {'form': form, 'thermometer_test': 'Данные не указаны',
+                                                                'second_test': 'Данные не указаны',
+                                                                'persistence_ratio': 'Данные не указаны',
+                                                                'courage_ratio': 'Данные не указаны',
+                                                                'emotional_stability': 'Данные не указаны'})
 
 
 @login_required
