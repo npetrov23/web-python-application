@@ -15,6 +15,7 @@ def get_result(name_indicator_model, request, *indicators):
             name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0])
     return done_indicators
 
+
 def get_result_sportsmen(name_indicator_model, user, request, *indicators):
     done_indicators = []
     date = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
@@ -51,10 +52,11 @@ def change_user(request):
             request.session['post_request'] = request.POST
             if Indicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
-                         '-' + str(request.POST.get('date_day'))):
-                func_indicators_tuple = get_result_sportsmen(Indicator, request.user, request, 'pulse_rate', 'index_of_rufe',
-                                                   'coefficient_of_endurance', 'blood_circulation',
-                                                   'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
+                         '-' + str(request.POST.get('date_day')), user=request.user):
+                func_indicators_tuple = get_result_sportsmen(Indicator, request.user, request, 'pulse_rate',
+                                                             'index_of_rufe',
+                                                             'coefficient_of_endurance', 'blood_circulation',
+                                                             'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
                 return render(request, 'table/index.html', {'form': form,
                                                             'pulse_rate': func_indicators_tuple[0],
                                                             'index_of_rufe': func_indicators_tuple[1],
@@ -77,6 +79,7 @@ def change_user(request):
                                                 'clinostatic_test': 'Данные не указаны',
                                                 'rosenthal_test': 'Данные не указаны'})
 
+
 @login_required
 def physical_indicator(request):
     post_request = request.session.get('post_request', None)
@@ -84,9 +87,9 @@ def physical_indicator(request):
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(request.POST)
             request.session['post_request'] = request.POST
-            if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
+            if PhysicalIndicator.objects.filter(user=request.POST.get('user')) and PhysicalIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
-                         '-' + str(request.POST.get('date_day'))):
+                         '-' + str(request.POST.get('date_day')),user=request.POST.get('user')):
                 physical_indicators_tuple = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
                                                        'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
                                                        'shuttle_run',
@@ -110,14 +113,16 @@ def physical_indicator(request):
         else:
             form = ForSportsmenForm(request.POST)
             request.session['post_request'] = request.POST
-            if Indicator.objects.filter(
+            if PhysicalIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
-                         '-' + str(request.POST.get('date_day'))):
-                physical_indicators_tuple = get_result_sportsmen(PhysicalIndicator, request.user, request, 'pullups', 'push_ups',
-                                                       'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
-                                                       'shuttle_run',
-                                                       'bridge', 'twine', 'blow_strength', 'flexibility',
-                                                       'coordination', 'physical_fitness', 'endurance')
+                         '-' + str(request.POST.get('date_day')), user=request.user):
+                physical_indicators_tuple = get_result_sportsmen(PhysicalIndicator, request.user, request, 'pullups',
+                                                                 'push_ups',
+                                                                 'sit_up', 'long_jump', 'acceleration',
+                                                                 'six_minute_run',
+                                                                 'shuttle_run',
+                                                                 'bridge', 'twine', 'blow_strength', 'flexibility',
+                                                                 'coordination', 'physical_fitness', 'endurance')
                 return render(request, 'table/PhysicalTraining.html',
                               {'form': form, 'pullups': physical_indicators_tuple[0],
                                'push_ups': physical_indicators_tuple[1],
@@ -156,42 +161,94 @@ def physical_indicator(request):
                    'endurance': 'Данные не указаны'})
 
 
-
 @login_required
 def tactical_indicator(request):
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
-        form = ChangeSportsmenForm(request.POST)
-        request.session['post_request'] = request.POST
-        if TacticaIndicator.objects.filter(user=request.POST.get('user')) and \
-                TacticaIndicator.objects.filter(
-                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-                        request.POST.get('date_day'))):
-            tactical_indicators_tuple = get_result(TacticaIndicator, request, 'versatility_technical_actions',
-                                                   'warfare_ratio',
-                                                   'performance_ratio', 'technical_readiness', 'tactical_action',
-                                                   'versatility_actions', 'chosen_tactics', 'adjustment_factor',
-                                                   'preparatory_actions', 'situational_actions', 'attack_efficiency',
-                                                   'scope_tactical_action', 'protective_actions')
-            return render(request, 'table/TacticalTraining.html', {'form': form,
-                                                                   'versatility_technical_actions':
-                                                                       tactical_indicators_tuple[0],
-                                                                   'warfare_ratio': tactical_indicators_tuple[1],
-                                                                   'performance_ratio': tactical_indicators_tuple[2],
-                                                                   'technical_readiness': tactical_indicators_tuple[3],
-                                                                   'tactical_action': tactical_indicators_tuple[4],
-                                                                   'versatility_actions': tactical_indicators_tuple[5],
-                                                                   'chosen_tactics': tactical_indicators_tuple[6],
-                                                                   'adjustment_factor': tactical_indicators_tuple[7],
-                                                                   'preparatory_actions': tactical_indicators_tuple[8],
-                                                                   'situational_actions': tactical_indicators_tuple[9],
-                                                                   'attack_efficiency': tactical_indicators_tuple[10],
-                                                                   'scope_tactical_action': tactical_indicators_tuple[
-                                                                       11],
-                                                                   'protective_actions': tactical_indicators_tuple[12]})
-
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if TacticaIndicator.objects.filter(user=request.POST.get('user')) and TacticaIndicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
+                tactical_indicators_tuple = get_result(TacticaIndicator, request, 'versatility_technical_actions',
+                                                       'warfare_ratio',
+                                                       'performance_ratio', 'technical_readiness', 'tactical_action',
+                                                       'versatility_actions', 'chosen_tactics', 'adjustment_factor',
+                                                       'preparatory_actions', 'situational_actions',
+                                                       'attack_efficiency',
+                                                       'scope_tactical_action', 'protective_actions')
+                return render(request, 'table/TacticalTraining.html', {'form': form,
+                                                                       'versatility_technical_actions':
+                                                                           tactical_indicators_tuple[0],
+                                                                       'warfare_ratio': tactical_indicators_tuple[1],
+                                                                       'performance_ratio': tactical_indicators_tuple[
+                                                                           2],
+                                                                       'technical_readiness': tactical_indicators_tuple[
+                                                                           3],
+                                                                       'tactical_action': tactical_indicators_tuple[4],
+                                                                       'versatility_actions': tactical_indicators_tuple[
+                                                                           5],
+                                                                       'chosen_tactics': tactical_indicators_tuple[6],
+                                                                       'adjustment_factor': tactical_indicators_tuple[
+                                                                           7],
+                                                                       'preparatory_actions': tactical_indicators_tuple[
+                                                                           8],
+                                                                       'situational_actions': tactical_indicators_tuple[
+                                                                           9],
+                                                                       'attack_efficiency': tactical_indicators_tuple[
+                                                                           10],
+                                                                       'scope_tactical_action':
+                                                                           tactical_indicators_tuple[
+                                                                               11],
+                                                                       'protective_actions': tactical_indicators_tuple[
+                                                                           12]})
+        else:
+            form = ForSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if TacticaIndicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day')), user=request.user):
+                tactical_indicators_tuple = get_result_sportsmen(TacticaIndicator, request.user, request,
+                                                                 'versatility_technical_actions',
+                                                                 'warfare_ratio',
+                                                                 'performance_ratio', 'technical_readiness',
+                                                                 'tactical_action',
+                                                                 'versatility_actions', 'chosen_tactics',
+                                                                 'adjustment_factor',
+                                                                 'preparatory_actions', 'situational_actions',
+                                                                 'attack_efficiency',
+                                                                 'scope_tactical_action', 'protective_actions')
+                return render(request, 'table/TacticalTraining.html', {'form': form,
+                                                                       'versatility_technical_actions':
+                                                                           tactical_indicators_tuple[0],
+                                                                       'warfare_ratio': tactical_indicators_tuple[1],
+                                                                       'performance_ratio': tactical_indicators_tuple[
+                                                                           2],
+                                                                       'technical_readiness': tactical_indicators_tuple[
+                                                                           3],
+                                                                       'tactical_action': tactical_indicators_tuple[4],
+                                                                       'versatility_actions': tactical_indicators_tuple[
+                                                                           5],
+                                                                       'chosen_tactics': tactical_indicators_tuple[6],
+                                                                       'adjustment_factor': tactical_indicators_tuple[
+                                                                           7],
+                                                                       'preparatory_actions': tactical_indicators_tuple[
+                                                                           8],
+                                                                       'situational_actions': tactical_indicators_tuple[
+                                                                           9],
+                                                                       'attack_efficiency': tactical_indicators_tuple[
+                                                                           10],
+                                                                       'scope_tactical_action':
+                                                                           tactical_indicators_tuple[
+                                                                               11],
+                                                                       'protective_actions': tactical_indicators_tuple[
+                                                                           12]})
     else:
-        form = ChangeSportsmenForm(post_request)
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(post_request)
+        else:
+            form = ForSportsmenForm(post_request)
     return render(request, 'table/TacticalTraining.html', {'form': form,
                                                            'versatility_technical_actions': 'Данные не указаны',
                                                            'warfare_ratio': 'Данные не указаны',
@@ -206,6 +263,9 @@ def tactical_indicator(request):
                                                            'attack_efficiency': 'Данные не указаны',
                                                            'scope_tactical_action': 'Данные не указаны',
                                                            'protective_actions': 'Данные не указаны'})
+
+
+
 
 
 @login_required
