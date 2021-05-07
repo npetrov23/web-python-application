@@ -19,8 +19,7 @@ class Indicator(models.Model):
     class Meta:
         verbose_name = 'Функциональная подготовленность'
         verbose_name_plural = 'Функциональная подготовленность'
-        unique_together = (('user','date'))
-        permissions = (("can_add_func_indicator", "can_view_list_sportsmen"),)
+        unique_together = (('user', 'date'))
 
 
 class PhysicalIndicator(models.Model):

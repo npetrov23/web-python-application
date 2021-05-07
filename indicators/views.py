@@ -1,7 +1,7 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from .forms import IndicatorForm, ChangeSportsmenForm, ChartForm, PhysicalIndicatorForm, PsyIndicatorForm, \
-    TacticalIndicatorForm
+    TacticalIndicatorForm, ForSportsmenForm
 from .models import *
 
 
@@ -15,29 +15,59 @@ def get_result(name_indicator_model, request, *indicators):
             name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0])
     return done_indicators
 
+def get_result_sportsmen(name_indicator_model, user, request, *indicators):
+    done_indicators = []
+    date = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
+        request.POST.get('date_day'))
+    for indicator in indicators:
+        done_indicators.append(
+            name_indicator_model.objects.filter(date=date, user=user).values_list(str(indicator), flat=True)[0])
+    return done_indicators
+
 
 @login_required
 def change_user(request):
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
-        form = ChangeSportsmenForm(request.POST)
-        request.session['post_request'] = request.POST
-        if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
-                date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
-                     '-' + str(request.POST.get('date_day'))):
-            func_indicators_tuple = get_result(Indicator, request, 'pulse_rate', 'index_of_rufe',
-                                               'coefficient_of_endurance', 'blood_circulation',
-                                               'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
-            return render(request, 'table/index.html', {'form': form,
-                                                        'pulse_rate': func_indicators_tuple[0],
-                                                        'index_of_rufe': func_indicators_tuple[1],
-                                                        'coefficient_of_endurance': func_indicators_tuple[2],
-                                                        'blood_circulation': func_indicators_tuple[3],
-                                                        'orthostatic_test': func_indicators_tuple[4],
-                                                        'clinostatic_test': func_indicators_tuple[5],
-                                                        'rosenthal_test': func_indicators_tuple[6]})
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day'))):
+                func_indicators_tuple = get_result(Indicator, request, 'pulse_rate', 'index_of_rufe',
+                                                   'coefficient_of_endurance', 'blood_circulation',
+                                                   'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
+                return render(request, 'table/index.html', {'form': form,
+                                                            'pulse_rate': func_indicators_tuple[0],
+                                                            'index_of_rufe': func_indicators_tuple[1],
+                                                            'coefficient_of_endurance': func_indicators_tuple[2],
+                                                            'blood_circulation': func_indicators_tuple[3],
+                                                            'orthostatic_test': func_indicators_tuple[4],
+                                                            'clinostatic_test': func_indicators_tuple[5],
+                                                            'rosenthal_test': func_indicators_tuple[6]})
+        else:
+            form = ForSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if Indicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day'))):
+                func_indicators_tuple = get_result_sportsmen(Indicator, request.user, request, 'pulse_rate', 'index_of_rufe',
+                                                   'coefficient_of_endurance', 'blood_circulation',
+                                                   'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
+                return render(request, 'table/index.html', {'form': form,
+                                                            'pulse_rate': func_indicators_tuple[0],
+                                                            'index_of_rufe': func_indicators_tuple[1],
+                                                            'coefficient_of_endurance': func_indicators_tuple[2],
+                                                            'blood_circulation': func_indicators_tuple[3],
+                                                            'orthostatic_test': func_indicators_tuple[4],
+                                                            'clinostatic_test': func_indicators_tuple[5],
+                                                            'rosenthal_test': func_indicators_tuple[6]})
     else:
-        form = ChangeSportsmenForm(post_request)
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(post_request)
+        else:
+            form = ForSportsmenForm(post_request)
     return render(request, 'table/index.html', {'form': form,
                                                 'pulse_rate': 'Данные не указаны',
                                                 'index_of_rufe': 'Данные не указаны',
@@ -46,7 +76,6 @@ def change_user(request):
                                                 'orthostatic_test': 'Данные не указаны',
                                                 'clinostatic_test': 'Данные не указаны',
                                                 'rosenthal_test': 'Данные не указаны'})
-
 
 @login_required
 def physical_indicator(request):

@@ -15,6 +15,15 @@ class ChangeSportsmenForm(forms.ModelForm):
         }
 
 
+class ForSportsmenForm(forms.ModelForm):
+    class Meta:
+        model = Indicator
+        fields = ('date',)
+        widgets = {
+            'date': forms.SelectDateWidget()
+        }
+
+
 class IndicatorForm(forms.ModelForm):
     class Meta:
         model = Indicator

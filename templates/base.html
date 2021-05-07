@@ -34,11 +34,15 @@
             <button type="submit" class="btn btn-primary btn-sm" >Построить графики</button>
         </form>
         {% endblock %}
-        {% if perms.catalog.can_add_func_indicator %}
-            <form action="{% url 'new' %}">
+
+        <form action="{% url 'new' %}">
             <button type="submit" class="btn btn-primary btn-sm" ><i class="fas fa-plus"></i> Добавить показатели</button>
         </form>
-        {% endif %}
+
+        <form action="{% url 'logout' %}">
+            <button type="submit" class="btn btn-primary btn-sm" ><i class="fas fa-plus"></i> Выход</button>
+        </form>
+
 
 
         </nav>
