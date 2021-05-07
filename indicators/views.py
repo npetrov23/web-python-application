@@ -35,7 +35,7 @@ def change_user(request):
             request.session['post_request'] = request.POST
             if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
-                         '-' + str(request.POST.get('date_day'))):
+                         '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
                 func_indicators_tuple = get_result(Indicator, request, 'pulse_rate', 'index_of_rufe',
                                                    'coefficient_of_endurance', 'blood_circulation',
                                                    'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
@@ -89,7 +89,7 @@ def physical_indicator(request):
             request.session['post_request'] = request.POST
             if PhysicalIndicator.objects.filter(user=request.POST.get('user')) and PhysicalIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
-                         '-' + str(request.POST.get('date_day')),user=request.POST.get('user')):
+                         '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
                 physical_indicators_tuple = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
                                                        'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
                                                        'shuttle_run',
@@ -267,27 +267,43 @@ def tactical_indicator(request):
 
 
 
-
 @login_required
 def psy_indicator(request):
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
-        form = ChangeSportsmenForm(request.POST)
-        request.session['post_request'] = request.POST
-        if PsyIndicator.objects.filter(user=request.POST.get('user')) and \
-                PsyIndicator.objects.filter(
-                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-                        request.POST.get('date_day'))):
-            psy_indicators_tuple = get_result(PsyIndicator, request, 'thermometer_test', 'second_test',
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if PsyIndicator.objects.filter(user=request.POST.get('user')) and PsyIndicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
+                psy_indicators_tuple = get_result(PsyIndicator, request, 'thermometer_test', 'second_test',
                                               'persistence_ratio', 'courage_ratio', 'emotional_stability')
-            return render(request, 'table/PsychologicalTraining.html',
-                          {'form': form, 'thermometer_test': psy_indicators_tuple[0],
-                           'second_test': psy_indicators_tuple[1],
-                           'persistence_ratio': psy_indicators_tuple[2],
-                           'courage_ratio': psy_indicators_tuple[3],
-                           'emotional_stability': psy_indicators_tuple[4]})
+                return render(request, 'table/PsychologicalTraining.html',
+                              {'form': form, 'thermometer_test': psy_indicators_tuple[0],
+                               'second_test': psy_indicators_tuple[1],
+                               'persistence_ratio': psy_indicators_tuple[2],
+                               'courage_ratio': psy_indicators_tuple[3],
+                               'emotional_stability': psy_indicators_tuple[4]})
+        else:
+            form = ForSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if PsyIndicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day')), user=request.user):
+                psy_indicators_tuple = get_result_sportsmen(PsyIndicator, request.user, request, 'thermometer_test', 'second_test',
+                                              'persistence_ratio', 'courage_ratio', 'emotional_stability')
+                return render(request, 'table/PsychologicalTraining.html',
+                              {'form': form, 'thermometer_test': psy_indicators_tuple[0],
+                               'second_test': psy_indicators_tuple[1],
+                               'persistence_ratio': psy_indicators_tuple[2],
+                               'courage_ratio': psy_indicators_tuple[3],
+                               'emotional_stability': psy_indicators_tuple[4]})
     else:
-        form = ChangeSportsmenForm(post_request)
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(post_request)
+        else:
+            form = ForSportsmenForm(post_request)
     return render(request, 'table/PsychologicalTraining.html', {'form': form, 'thermometer_test': 'Данные не указаны',
                                                                 'second_test': 'Данные не указаны',
                                                                 'persistence_ratio': 'Данные не указаны',
