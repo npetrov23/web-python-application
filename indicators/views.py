@@ -81,36 +81,63 @@ def change_user(request):
 def physical_indicator(request):
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
-        form = ChangeSportsmenForm(request.POST)
-        request.session['post_request'] = request.POST
-        if PhysicalIndicator.objects.filter(user=request.POST.get('user')) and \
-                PhysicalIndicator.objects.filter(
-                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-                        request.POST.get('date_day'))):
-            physical_indicators_tuple = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
-                                                   'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
-                                                   'shuttle_run',
-                                                   'bridge', 'twine', 'blow_strength', 'flexibility',
-                                                   'coordination', 'physical_fitness', 'endurance')
-
-            return render(request, 'table/PhysicalTraining.html',
-                          {'form': form, 'pullups': physical_indicators_tuple[0],
-                           'push_ups': physical_indicators_tuple[1],
-                           'sit_up': physical_indicators_tuple[2],
-                           'long_jump': physical_indicators_tuple[3],
-                           'acceleration': physical_indicators_tuple[4],
-                           'six_minute_run': physical_indicators_tuple[5],
-                           'shuttle_run': physical_indicators_tuple[6],
-                           'bridge': physical_indicators_tuple[7],
-                           'twine': physical_indicators_tuple[8],
-                           'blow_strength': physical_indicators_tuple[9],
-                           'flexibility': physical_indicators_tuple[10],
-                           'coordination': physical_indicators_tuple[11],
-                           'physical_fitness': physical_indicators_tuple[12],
-                           'endurance': physical_indicators_tuple[13]})
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day'))):
+                physical_indicators_tuple = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
+                                                       'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
+                                                       'shuttle_run',
+                                                       'bridge', 'twine', 'blow_strength', 'flexibility',
+                                                       'coordination', 'physical_fitness', 'endurance')
+                return render(request, 'table/PhysicalTraining.html',
+                              {'form': form, 'pullups': physical_indicators_tuple[0],
+                               'push_ups': physical_indicators_tuple[1],
+                               'sit_up': physical_indicators_tuple[2],
+                               'long_jump': physical_indicators_tuple[3],
+                               'acceleration': physical_indicators_tuple[4],
+                               'six_minute_run': physical_indicators_tuple[5],
+                               'shuttle_run': physical_indicators_tuple[6],
+                               'bridge': physical_indicators_tuple[7],
+                               'twine': physical_indicators_tuple[8],
+                               'blow_strength': physical_indicators_tuple[9],
+                               'flexibility': physical_indicators_tuple[10],
+                               'coordination': physical_indicators_tuple[11],
+                               'physical_fitness': physical_indicators_tuple[12],
+                               'endurance': physical_indicators_tuple[13]})
+        else:
+            form = ForSportsmenForm(request.POST)
+            request.session['post_request'] = request.POST
+            if Indicator.objects.filter(
+                    date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
+                         '-' + str(request.POST.get('date_day'))):
+                physical_indicators_tuple = get_result_sportsmen(PhysicalIndicator, request.user, request, 'pullups', 'push_ups',
+                                                       'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
+                                                       'shuttle_run',
+                                                       'bridge', 'twine', 'blow_strength', 'flexibility',
+                                                       'coordination', 'physical_fitness', 'endurance')
+                return render(request, 'table/PhysicalTraining.html',
+                              {'form': form, 'pullups': physical_indicators_tuple[0],
+                               'push_ups': physical_indicators_tuple[1],
+                               'sit_up': physical_indicators_tuple[2],
+                               'long_jump': physical_indicators_tuple[3],
+                               'acceleration': physical_indicators_tuple[4],
+                               'six_minute_run': physical_indicators_tuple[5],
+                               'shuttle_run': physical_indicators_tuple[6],
+                               'bridge': physical_indicators_tuple[7],
+                               'twine': physical_indicators_tuple[8],
+                               'blow_strength': physical_indicators_tuple[9],
+                               'flexibility': physical_indicators_tuple[10],
+                               'coordination': physical_indicators_tuple[11],
+                               'physical_fitness': physical_indicators_tuple[12],
+                               'endurance': physical_indicators_tuple[13]})
     else:
-        form = ChangeSportsmenForm(post_request)
-
+        if request.user.has_perm('indicators.add_indicator'):
+            form = ChangeSportsmenForm(post_request)
+        else:
+            form = ForSportsmenForm(post_request)
     return render(request, 'table/PhysicalTraining.html',
                   {'form': form,
                    'pullups': 'Данные не указаны',
@@ -127,6 +154,7 @@ def physical_indicator(request):
                    'coordination': 'Данные не указаны',
                    'physical_fitness': 'Данные не указаны',
                    'endurance': 'Данные не указаны'})
+
 
 
 @login_required
