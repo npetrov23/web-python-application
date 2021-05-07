@@ -14,8 +14,12 @@
     <div class="mx-5 p-1">
         <p></p>
     {% block forms %}
+
         <nav class="navbar navbar-light bg-light justify-content-between">
             <form method="POST" class="post-form">{% csrf_token %}
+            {% if not perms.indicator.add_indicator %}
+            <p>Спортсмен: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+            {% endif %}
                     {% for field in form %}
                             <div class="fieldWrapper">
                             {# uncomment to display field errors #}
@@ -26,6 +30,7 @@
                         </div>
                     {% endfor %}
             <div class="btn-group" role="group" aria-label="Third group">
+
                 <button type="submit" class="btn btn-primary btn-sm btn-success mr-3">Вывести</button>
             </form>
 
