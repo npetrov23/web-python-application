@@ -17,7 +17,7 @@
 
         <nav class="navbar navbar-light bg-light justify-content-between">
             <form method="POST" class="post-form">{% csrf_token %}
-            {% if not perms.indicator.add_indicator %}
+            {% if not perms.indicators.add_indicator %}
             <p>Спортсмен: {{ request.user.first_name }} {{ request.user.last_name }}</p>
             {% endif %}
                     {% for field in form %}
@@ -34,23 +34,24 @@
                 <button type="submit" class="btn btn-primary btn-sm btn-success mr-3">Вывести</button>
             </form>
 
-        {% block charts_start %}
-            <form action="{% url 'new' %}">
-            <button type="submit" class="btn btn-primary btn-sm" >Построить графики</button>
-        </form>
-        {% endblock %}
+                {% block charts_start %}
+                    <form action="{% url 'new' %}">
+                    <button type="submit" class="btn btn-primary btn-sm" >Построить графики</button>
+                </form>
+                {% endblock %}
 
-        <form action="{% url 'new' %}">
-            <button type="submit" class="btn btn-primary btn-sm" ><i class="fas fa-plus"></i> Добавить показатели</button>
-        </form>
+                {% if perms.indicators.add_indicator %}
+                <form action="{% url 'new' %}">
+                    <button type="submit" class="btn btn-primary btn-sm mr-1" ><i class="fas fa-plus"></i> Добавить показатели</button>
+                </form>
+                {% endif %}
 
-        <form action="{% url 'logout' %}">
-            <button type="submit" class="btn btn-primary btn-sm" ><i class="fas fa-plus"></i> Выход</button>
-        </form>
-
-
-
+                <form action="{% url 'logout' %}">
+                    <button type="submit" class="btn btn-primary btn-sm btn-danger" ><i class="fas fa-sign-out-alt"></i> Выход</button>
+                </form>
         </nav>
+
+
     {% endblock %}
     {% block menu %}
         <p></p>
