@@ -59,12 +59,27 @@ class PsyIndicatorForm(forms.ModelForm):
             'date': forms.SelectDateWidget()
         }
 
+
 class ChartForm(forms.ModelForm):
     end_date = forms.DateField(widget = forms.SelectDateWidget, label='Конечная дата', initial=date.today)
 
     class Meta:
         model = Indicator
         fields = ('user', 'date')
+        widgets = {
+            'date': forms.SelectDateWidget()
+        }
+        labels = {
+            'date': ('Начальная дата'),
+        }
+
+
+class SportsmenChartForm(forms.ModelForm):
+    end_date = forms.DateField(widget = forms.SelectDateWidget, label='Конечная дата', initial=date.today)
+
+    class Meta:
+        model = Indicator
+        fields = ('date',)
         widgets = {
             'date': forms.SelectDateWidget()
         }

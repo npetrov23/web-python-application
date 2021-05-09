@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from .forms import IndicatorForm, ChangeSportsmenForm, ChartForm, PhysicalIndicatorForm, PsyIndicatorForm, \
-    TacticalIndicatorForm, ForSportsmenForm
+    TacticalIndicatorForm, ForSportsmenForm, SportsmenChartForm
 from .models import *
 
 
@@ -23,6 +23,20 @@ def get_result_sportsmen(name_indicator_model, user, request, *indicators):
     for indicator in indicators:
         done_indicators.append(
             name_indicator_model.objects.filter(date=date, user=user).values_list(str(indicator), flat=True)[0])
+    return done_indicators
+
+
+def get_result_chart(name_indicator_model, request, user, *indicators):
+    done_indicators = []
+    date_start = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
+        request.POST.get('date_day'))
+    date_end = str(request.POST.get('end_date_year')) + '-' + str(request.POST.get('end_date_month')) + '-' + str(
+        request.POST.get('end_date_day'))
+    done_indicators.append(
+        name_indicator_model.objects.values('date').filter(user=user, date__range=[date_start, date_end]))
+    for indicator in indicators:
+        done_indicators.append(
+            name_indicator_model.objects.values(indicator).filter(user=user, date__range=[date_start, date_end]))
     return done_indicators
 
 
@@ -265,8 +279,6 @@ def tactical_indicator(request):
                                                            'protective_actions': 'Данные не указаны'})
 
 
-
-
 @login_required
 def psy_indicator(request):
     post_request = request.session.get('post_request', None)
@@ -278,7 +290,7 @@ def psy_indicator(request):
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
                 psy_indicators_tuple = get_result(PsyIndicator, request, 'thermometer_test', 'second_test',
-                                              'persistence_ratio', 'courage_ratio', 'emotional_stability')
+                                                  'persistence_ratio', 'courage_ratio', 'emotional_stability')
                 return render(request, 'table/PsychologicalTraining.html',
                               {'form': form, 'thermometer_test': psy_indicators_tuple[0],
                                'second_test': psy_indicators_tuple[1],
@@ -291,8 +303,9 @@ def psy_indicator(request):
             if PsyIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.user):
-                psy_indicators_tuple = get_result_sportsmen(PsyIndicator, request.user, request, 'thermometer_test', 'second_test',
-                                              'persistence_ratio', 'courage_ratio', 'emotional_stability')
+                psy_indicators_tuple = get_result_sportsmen(PsyIndicator, request.user, request, 'thermometer_test',
+                                                            'second_test',
+                                                            'persistence_ratio', 'courage_ratio', 'emotional_stability')
                 return render(request, 'table/PsychologicalTraining.html',
                               {'form': form, 'thermometer_test': psy_indicators_tuple[0],
                                'second_test': psy_indicators_tuple[1],
@@ -362,52 +375,32 @@ def charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
         request.session['post_request_chart'] = request.POST
-        id_user = request.POST.get('user')
-        date_start = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-            request.POST.get('date_day'))
-        date_end = str(request.POST.get('end_date_year')) + '-' + str(request.POST.get('end_date_month')) + '-' + str(
-            request.POST.get('end_date_day'))
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(request.POST)
+            dataset = get_result_chart(Indicator, request, request.POST.get('user'), 'pulse_rate', 'index_of_rufe'
+                                       , 'coefficient_of_endurance', 'blood_circulation', 'orthostatic_test',
+                                       'clinostatic_test', 'rosenthal_test')
+        else:
+            form_date = SportsmenChartForm(request.POST)
+            dataset = get_result_chart(Indicator, request, request.user, 'pulse_rate', 'index_of_rufe'
+                                       , 'coefficient_of_endurance', 'blood_circulation', 'orthostatic_test',
+                                       'clinostatic_test', 'rosenthal_test')
 
-        formdate = ChartForm(request.POST)
-        dataset_date = Indicator.objects.values('date').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_pulse_rate = Indicator.objects.values('pulse_rate').filter(user=id_user,
-                                                                           date__range=[date_start, date_end])
-        dataset_index_of_rufe = Indicator.objects.values('index_of_rufe').filter(user=id_user,
-                                                                                 date__range=[date_start, date_end])
-        dataset_coefficient_of_endurance = Indicator.objects.values('coefficient_of_endurance').filter(user=id_user,
-                                                                                                       date__range=[
-                                                                                                           date_start,
-                                                                                                           date_end])
-        dataset_blood_circulation = Indicator.objects.values('blood_circulation').filter(user=id_user,
-                                                                                         date__range=[date_start,
-                                                                                                      date_end])
-        dataset_orthostatic_test = Indicator.objects.values('orthostatic_test').filter(user=id_user,
-                                                                                       date__range=[date_start,
-                                                                                                    date_end])
-        dataset_clinostatic_test = Indicator.objects.values('clinostatic_test').filter(user=id_user,
-                                                                                       date__range=[date_start,
-                                                                                                    date_end])
-        dataset_rosenthal_test = Indicator.objects.values('rosenthal_test').filter(user=id_user,
-                                                                                   date__range=[date_start, date_end])
+        return render(request, 'charts/charts.html', {'formdate': form_date,
+                                                      'dataset_date': dataset[0],
+                                                      'dataset_pulse_rate': dataset[1],
+                                                      'dataset_index_of_rufe': dataset[2],
+                                                      'dataset_coefficient_of_endurance': dataset[3],
+                                                      'dataset_blood_circulation': dataset[4],
+                                                      'dataset_orthostatic_test': dataset[5],
+                                                      'dataset_clinostatic_test': dataset[6],
+                                                      'dataset_rosenthal_test': dataset[7]})
     else:
-        formdate = ChartForm(post_request_chart)
-        dataset_date = ['']
-        dataset_pulse_rate = []
-        dataset_index_of_rufe = []
-        dataset_coefficient_of_endurance = []
-        dataset_blood_circulation = []
-        dataset_orthostatic_test = []
-        dataset_clinostatic_test = []
-        dataset_rosenthal_test = []
-    return render(request, 'charts/charts.html', {'formdate': formdate,
-                                                  'dataset_date': dataset_date,
-                                                  'dataset_pulse_rate': dataset_pulse_rate,
-                                                  'dataset_index_of_rufe': dataset_index_of_rufe,
-                                                  'dataset_blood_circulation': dataset_blood_circulation,
-                                                  'dataset_orthostatic_test': dataset_orthostatic_test,
-                                                  'dataset_clinostatic_test': dataset_clinostatic_test,
-                                                  'dataset_rosenthal_test': dataset_rosenthal_test,
-                                                  'dataset_coefficient_of_endurance': dataset_coefficient_of_endurance})
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(post_request_chart)
+        else:
+            form_date = SportsmenChartForm(post_request_chart)
+    return render(request, 'charts/charts.html', {'formdate': form_date})
 
 
 @login_required
