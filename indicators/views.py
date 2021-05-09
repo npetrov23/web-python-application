@@ -325,6 +325,7 @@ def psy_indicator(request):
 
 
 @login_required
+@permission_required('indicators.add_indicator')
 def new_indicator(request):
     if request.method == 'POST':
         form_new_indicator = IndicatorForm(request.POST)
@@ -336,6 +337,7 @@ def new_indicator(request):
 
 
 @login_required
+@permission_required('indicators.add_indicator')
 def new_physical_indicator(request):
     if request.method == 'POST':
         form_new_indicator = PhysicalIndicatorForm(request.POST)
@@ -347,6 +349,7 @@ def new_physical_indicator(request):
 
 
 @login_required
+@permission_required('indicators.add_indicator')
 def new_tactical_indicator(request):
     if request.method == 'POST':
         form_new_indicator = TacticalIndicatorForm(request.POST)
@@ -359,6 +362,7 @@ def new_tactical_indicator(request):
 
 
 @login_required
+@permission_required('indicators.add_indicator')
 def new_psy_indicator(request):
     if request.method == 'POST':
         form_new_indicator = PsyIndicatorForm(request.POST)
