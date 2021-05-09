@@ -491,45 +491,30 @@ def tactical_charts(request):
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/tactical_charts.html', {'formdate': form_date})
 
-
 @login_required
 def psy_charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
         request.session['post_request_chart'] = request.POST
-        id_user = request.POST.get('user')
-        date_start = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-            request.POST.get('date_day'))
-        date_end = str(request.POST.get('end_date_year')) + '-' + str(request.POST.get('end_date_month')) + '-' + str(
-            request.POST.get('end_date_day'))
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(request.POST)
+            dataset = get_result_chart(PsyIndicator, request, request.POST.get('user'), 'thermometer_test', 'second_test',
+                                                  'persistence_ratio', 'courage_ratio', 'emotional_stability')
+        else:
+            form_date = SportsmenChartForm(request.POST)
+            dataset = get_result_chart(PsyIndicator, request, request.user, 'thermometer_test', 'second_test',
+                                                  'persistence_ratio', 'courage_ratio', 'emotional_stability')
 
-        formdate = ChartForm(request.POST)
-        dataset_date = PsyIndicator.objects.values('date').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_thermometer_test = PsyIndicator.objects.values('thermometer_test').filter(user=id_user,
-                                                                                          date__range=[date_start,
-                                                                                                       date_end])
-        dataset_second_test = PsyIndicator.objects.values('second_test').filter(user=id_user,
-                                                                                date__range=[date_start, date_end])
-        dataset_emotional_stability = PsyIndicator.objects.values('emotional_stability').filter(user=id_user,
-                                                                                                date__range=[date_start,
-                                                                                                             date_end])
-        dataset_persistence_ratio = PsyIndicator.objects.values('persistence_ratio').filter(user=id_user,
-                                                                                            date__range=[date_start,
-                                                                                                         date_end])
-        dataset_courage_ratio = PsyIndicator.objects.values('courage_ratio').filter(user=id_user,
-                                                                                    date__range=[date_start, date_end])
+        return render(request, 'charts/psy_charts.html', {'formdate': form_date,
+                                                      'dataset_date': dataset[0],
+                                                      'dataset_thermometer_test': dataset[1],
+                                                      'dataset_second_test': dataset[2],
+                                                      'dataset_persistence_ratio': dataset[3],
+                                                      'dataset_courage_ratio': dataset[4],
+                                                      'dataset_emotional_stability': dataset[5]})
     else:
-        formdate = ChartForm(post_request_chart)
-        dataset_date = ['']
-        dataset_thermometer_test = []
-        dataset_second_test = []
-        dataset_emotional_stability = []
-        dataset_persistence_ratio = []
-        dataset_courage_ratio = []
-    return render(request, 'charts/psy_charts.html', {'formdate': formdate,
-                                                      'dataset_date': dataset_date,
-                                                      'dataset_thermometer_test': dataset_thermometer_test,
-                                                      'dataset_second_test': dataset_second_test,
-                                                      'dataset_persistence_ratio': dataset_persistence_ratio,
-                                                      'dataset_courage_ratio': dataset_courage_ratio,
-                                                      'dataset_emotional_stability': dataset_emotional_stability})
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(post_request_chart)
+        else:
+            form_date = SportsmenChartForm(post_request_chart)
+    return render(request, 'charts/psy_charts.html', {'formdate': form_date})
