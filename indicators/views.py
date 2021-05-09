@@ -402,87 +402,47 @@ def charts(request):
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/charts.html', {'formdate': form_date})
 
-
 @login_required
 def physical_charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
         request.session['post_request_chart'] = request.POST
-        id_user = request.POST.get('user')
-        date_start = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-            request.POST.get('date_day'))
-        date_end = str(request.POST.get('end_date_year')) + '-' + str(request.POST.get('end_date_month')) + '-' + str(
-            request.POST.get('end_date_day'))
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(request.POST)
+            dataset = get_result_chart(PhysicalIndicator, request, request.POST.get('user'), 'pullups', 'push_ups', 'long_jump',
+                                                       'acceleration', 'six_minute_run', 'shuttle_run',
+                                                        'bridge', 'twine', 'blow_strength', 'endurance', 'flexibility',
+                                                       'coordination', 'physical_fitness', 'sit_up')
+        else:
+            form_date = SportsmenChartForm(request.POST)
+            dataset = get_result_chart(PhysicalIndicator, request, request.user, 'pullups', 'push_ups', 'long_jump',
+                                                       'acceleration', 'six_minute_run', 'shuttle_run',
+                                                        'bridge', 'twine', 'blow_strength', 'endurance', 'flexibility',
+                                                       'coordination', 'physical_fitness', 'sit_up')
 
-        formdate = ChartForm(request.POST)
-        dataset_date = PhysicalIndicator.objects.values('date').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_pullups = PhysicalIndicator.objects.values('pullups').filter(user=id_user,
-                                                                             date__range=[date_start, date_end])
-        dataset_push_ups = PhysicalIndicator.objects.values('push_ups').filter(user=id_user,
-                                                                               date__range=[date_start, date_end])
-        dataset_sit_up = PhysicalIndicator.objects.values('sit_up').filter(user=id_user,
-                                                                           date__range=[date_start, date_end])
-        dataset_long_jump = PhysicalIndicator.objects.values('long_jump').filter(user=id_user,
-                                                                                 date__range=[date_start, date_end])
-        dataset_acceleration = PhysicalIndicator.objects.values('acceleration').filter(user=id_user,
-                                                                                       date__range=[date_start,
-                                                                                                    date_end])
-        dataset_six_minute_run = PhysicalIndicator.objects.values('six_minute_run').filter(user=id_user,
-                                                                                           date__range=[date_start,
-                                                                                                        date_end])
-        dataset_shuttle_run = PhysicalIndicator.objects.values('shuttle_run').filter(user=id_user,
-                                                                                     date__range=[date_start, date_end])
-        dataset_bridge = PhysicalIndicator.objects.values('bridge').filter(user=id_user,
-                                                                           date__range=[date_start, date_end])
-        dataset_twine = PhysicalIndicator.objects.values('twine').filter(user=id_user,
-                                                                         date__range=[date_start, date_end])
-        dataset_blow_strength = PhysicalIndicator.objects.values('blow_strength').filter(user=id_user,
-                                                                                         date__range=[date_start,
-                                                                                                      date_end])
-        dataset_endurance = PhysicalIndicator.objects.values('endurance').filter(user=id_user,
-                                                                                 date__range=[date_start, date_end])
-        dataset_flexibility = PhysicalIndicator.objects.values('flexibility').filter(user=id_user,
-                                                                                     date__range=[date_start, date_end])
-        dataset_coordination = PhysicalIndicator.objects.values('coordination').filter(user=id_user,
-                                                                                       date__range=[date_start,
-                                                                                                    date_end])
-        dataset_physical_fitness = PhysicalIndicator.objects.values('physical_fitness').filter(user=id_user,
-                                                                                               date__range=[date_start,
-                                                                                                            date_end])
+        return render(request, 'charts/physical_charts.html', {'formdate': form_date,
+                                                           'dataset_date': dataset[0],
+                                                           'dataset_pullups': dataset[1],
+                                                           'dataset_push_ups': dataset[2],
+                                                           'dataset_long_jump': dataset[3],
+                                                           'dataset_acceleration': dataset[4],
+                                                           'dataset_six_minute_run': dataset[5],
+                                                           'dataset_shuttle_run': dataset[6],
+                                                           'dataset_bridge': dataset[7],
+                                                           'dataset_twine': dataset[8],
+                                                           'dataset_blow_strength': dataset[9],
+                                                           'dataset_endurance': dataset[10],
+                                                           'dataset_flexibility': dataset[11],
+                                                           'dataset_coordination': dataset[12],
+                                                           'dataset_physical_fitness': dataset[13],
+                                                           'dataset_sit_up': dataset[14]})
     else:
-        formdate = ChartForm(post_request_chart)
-        dataset_date = ['']
-        dataset_pullups = []
-        dataset_push_ups = []
-        dataset_sit_up = []
-        dataset_long_jump = []
-        dataset_acceleration = []
-        dataset_six_minute_run = []
-        dataset_shuttle_run = []
-        dataset_bridge = []
-        dataset_twine = []
-        dataset_blow_strength = []
-        dataset_endurance = []
-        dataset_flexibility = []
-        dataset_coordination = []
-        dataset_physical_fitness = []
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(post_request_chart)
+        else:
+            form_date = SportsmenChartForm(post_request_chart)
+    return render(request, 'charts/physical_charts.html', {'formdate': form_date})
 
-    return render(request, 'charts/physical_charts.html', {'formdate': formdate,
-                                                           'dataset_date': dataset_date,
-                                                           'dataset_pullups': dataset_pullups,
-                                                           'dataset_push_ups': dataset_push_ups,
-                                                           'dataset_long_jump': dataset_long_jump,
-                                                           'dataset_acceleration': dataset_acceleration,
-                                                           'dataset_six_minute_run': dataset_six_minute_run,
-                                                           'dataset_shuttle_run': dataset_shuttle_run,
-                                                           'dataset_bridge': dataset_bridge,
-                                                           'dataset_twine': dataset_twine,
-                                                           'dataset_blow_strength': dataset_blow_strength,
-                                                           'dataset_endurance': dataset_endurance,
-                                                           'dataset_flexibility': dataset_flexibility,
-                                                           'dataset_coordination': dataset_coordination,
-                                                           'dataset_physical_fitness': dataset_physical_fitness,
-                                                           'dataset_sit_up': dataset_sit_up})
 
 
 @login_required
