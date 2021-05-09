@@ -1,47 +1,113 @@
-<!DOCTYPE html>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="icon" href="Favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <title>Laravel</title>
 </head>
 <body>
-    {% block content %}
 
-    {% if form.errors %}
-      <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
+<nav class="navbar navbar-expand-lg navbar-light navbar-laravel">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    {% if next %}
-      {% if user.is_authenticated %}
-        <p>Your account doesn't have access to this page. To proceed,
-        please login with an account that has access.</p>
-      {% else %}
-        <p>Please login to see this page.</p>
-      {% endif %}
-    {% endif %}
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Авторизоваться</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Регистрация</a>
+                </li>
+            </ul>
 
-    <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <table>
+        </div>
+    </div>
+</nav>
 
-    <tr>
-      <td>{{ form.username.label_tag }}</td>
-      <td>{{ form.username }}</td>
-    </tr>
+<main class="login-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Авторизация</div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'login' %}">{% csrf_token %}
+                             <div class="form-group row">
+                                <div class="mx-5 p-1">
+                                    {% if form.errors %}
+                                      <p>Ваш логин или пароль введен неправильно. Пожалуйста, повторите попытку</p>
+                                    {% endif %}
 
-    <tr>
-      <td>{{ form.password.label_tag }}</td>
-      <td>{{ form.password }}</td>
-    </tr>
-    </table>
+                                    {% if next %}
+                                      {% if user.is_authenticated %}
+                                        <p>Вы не имееете прав доступа для просмотра этой страницы.</p>
+                                      {% else %}
+                                        <p>Пожалуйста, авторизуйтесь, чтобы просматривать эту страницу</p>
+                                      {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
 
-    <input type="submit" value="login" />
-    <input type="hidden" name="next" value="{{ next }}" />
-    </form>
+                            <div class="form-group row">
+                                <label for="email_address" class="col-md-4 col-form-label text-md-right">{{ form.username.label_tag }}</label>
+                                <div class="controls">
+                                    <input class="form-control" type="text" id="username" name="username"  placeholder="">
+                                </div>
+                            </div>
 
-    {# Assumes you setup the password_reset view in your URLconf #}
-    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">{{ form.password.label_tag }}</label>
+                                <div class="controls">
+                                    <input class="form-control" type="password" name="password" id="password" placeholder="">
+                                </div>
+                            </div>
 
-    {% endblock %}
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="remember"> Запомнить меня
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 offset-md-4">
+                                    <input type="submit" class="btn btn-primary" value="Войти" />
+                                    <input type="hidden" name="next" value="{{ next }}" />
+                                <a href="#" class="btn btn-link">
+                                   Забыли пароль?
+                                </a>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</main>
 </body>
 </html>

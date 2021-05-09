@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% block charts_start %}
     <form action="{% url 'charts' %}">
         <button type="submit" class="btn btn-primary btn-sm mr-1" ><i class="fas fa-chart-line"></i> Построить графики</button>
