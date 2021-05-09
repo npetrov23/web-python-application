@@ -402,6 +402,7 @@ def charts(request):
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/charts.html', {'formdate': form_date})
 
+
 @login_required
 def physical_charts(request):
     post_request_chart = request.session.get('post_request', None)
@@ -409,33 +410,34 @@ def physical_charts(request):
         request.session['post_request_chart'] = request.POST
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(request.POST)
-            dataset = get_result_chart(PhysicalIndicator, request, request.POST.get('user'), 'pullups', 'push_ups', 'long_jump',
-                                                       'acceleration', 'six_minute_run', 'shuttle_run',
-                                                        'bridge', 'twine', 'blow_strength', 'endurance', 'flexibility',
-                                                       'coordination', 'physical_fitness', 'sit_up')
+            dataset = get_result_chart(PhysicalIndicator, request, request.POST.get('user'), 'pullups', 'push_ups',
+                                       'long_jump',
+                                       'acceleration', 'six_minute_run', 'shuttle_run',
+                                       'bridge', 'twine', 'blow_strength', 'endurance', 'flexibility',
+                                       'coordination', 'physical_fitness', 'sit_up')
         else:
             form_date = SportsmenChartForm(request.POST)
             dataset = get_result_chart(PhysicalIndicator, request, request.user, 'pullups', 'push_ups', 'long_jump',
-                                                       'acceleration', 'six_minute_run', 'shuttle_run',
-                                                        'bridge', 'twine', 'blow_strength', 'endurance', 'flexibility',
-                                                       'coordination', 'physical_fitness', 'sit_up')
+                                       'acceleration', 'six_minute_run', 'shuttle_run',
+                                       'bridge', 'twine', 'blow_strength', 'endurance', 'flexibility',
+                                       'coordination', 'physical_fitness', 'sit_up')
 
         return render(request, 'charts/physical_charts.html', {'formdate': form_date,
-                                                           'dataset_date': dataset[0],
-                                                           'dataset_pullups': dataset[1],
-                                                           'dataset_push_ups': dataset[2],
-                                                           'dataset_long_jump': dataset[3],
-                                                           'dataset_acceleration': dataset[4],
-                                                           'dataset_six_minute_run': dataset[5],
-                                                           'dataset_shuttle_run': dataset[6],
-                                                           'dataset_bridge': dataset[7],
-                                                           'dataset_twine': dataset[8],
-                                                           'dataset_blow_strength': dataset[9],
-                                                           'dataset_endurance': dataset[10],
-                                                           'dataset_flexibility': dataset[11],
-                                                           'dataset_coordination': dataset[12],
-                                                           'dataset_physical_fitness': dataset[13],
-                                                           'dataset_sit_up': dataset[14]})
+                                                               'dataset_date': dataset[0],
+                                                               'dataset_pullups': dataset[1],
+                                                               'dataset_push_ups': dataset[2],
+                                                               'dataset_long_jump': dataset[3],
+                                                               'dataset_acceleration': dataset[4],
+                                                               'dataset_six_minute_run': dataset[5],
+                                                               'dataset_shuttle_run': dataset[6],
+                                                               'dataset_bridge': dataset[7],
+                                                               'dataset_twine': dataset[8],
+                                                               'dataset_blow_strength': dataset[9],
+                                                               'dataset_endurance': dataset[10],
+                                                               'dataset_flexibility': dataset[11],
+                                                               'dataset_coordination': dataset[12],
+                                                               'dataset_physical_fitness': dataset[13],
+                                                               'dataset_sit_up': dataset[14]})
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(post_request_chart)
@@ -444,97 +446,50 @@ def physical_charts(request):
     return render(request, 'charts/physical_charts.html', {'formdate': form_date})
 
 
-
 @login_required
 def tactical_charts(request):
     post_request_chart = request.session.get('post_request', None)
     if request.method == 'POST':
         request.session['post_request_chart'] = request.POST
-        id_user = request.POST.get('user')
-        date_start = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
-            request.POST.get('date_day'))
-        date_end = str(request.POST.get('end_date_year')) + '-' + str(request.POST.get('end_date_month')) + '-' + str(
-            request.POST.get('end_date_day'))
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(request.POST)
+            dataset = get_result_chart(TacticaIndicator, request, request.POST.get('user'),
+                                       'versatility_technical_actions',
+                                       'attack_efficiency', 'warfare_ratio',
+                                       'performance_ratio', 'technical_readiness', 'tactical_action',
+                                       'versatility_actions', 'chosen_tactics', 'adjustment_factor',
+                                       'preparatory_actions', 'situational_actions',
+                                       'scope_tactical_action', 'protective_actions')
+        else:
+            form_date = SportsmenChartForm(request.POST)
+            dataset = get_result_chart(TacticaIndicator, request, request.user, 'versatility_technical_actions',
+                                       'attack_efficiency', 'warfare_ratio',
+                                       'performance_ratio', 'technical_readiness', 'tactical_action',
+                                       'versatility_actions', 'chosen_tactics', 'adjustment_factor',
+                                       'preparatory_actions', 'situational_actions',
+                                       'scope_tactical_action', 'protective_actions')
 
-        formdate = ChartForm(request.POST)
-        dataset_date = TacticaIndicator.objects.values('date').filter(user=id_user, date__range=[date_start, date_end])
-        dataset_versatility_technical_actions = TacticaIndicator.objects.values('versatility_technical_actions').filter(
-            user=id_user, date__range=[date_start, date_end])
-        dataset_attack_efficiency = TacticaIndicator.objects.values('attack_efficiency').filter(user=id_user,
-                                                                                                date__range=[date_start,
-                                                                                                             date_end])
-        dataset_protective_actions = TacticaIndicator.objects.values('protective_actions').filter(user=id_user,
-                                                                                                  date__range=[
-                                                                                                      date_start,
-                                                                                                      date_end])
-
-        dataset_warfare_ratio = TacticaIndicator.objects.values('warfare_ratio').filter(user=id_user,
-                                                                                        date__range=[date_start,
-                                                                                                     date_end])
-        dataset_performance_ratio = TacticaIndicator.objects.values('performance_ratio').filter(user=id_user,
-                                                                                                date__range=[date_start,
-                                                                                                             date_end])
-        dataset_technical_readiness = TacticaIndicator.objects.values('technical_readiness').filter(user=id_user,
-                                                                                                    date__range=[
-                                                                                                        date_start,
-                                                                                                        date_end])
-        dataset_tactical_action = TacticaIndicator.objects.values('tactical_action').filter(user=id_user,
-                                                                                            date__range=[date_start,
-                                                                                                         date_end])
-        dataset_versatility_actions = TacticaIndicator.objects.values('versatility_actions').filter(user=id_user,
-                                                                                                    date__range=[
-                                                                                                        date_start,
-                                                                                                        date_end])
-        dataset_chosen_tactics = TacticaIndicator.objects.values('chosen_tactics').filter(user=id_user,
-                                                                                          date__range=[date_start,
-                                                                                                       date_end])
-        dataset_adjustment_factor = TacticaIndicator.objects.values('adjustment_factor').filter(user=id_user,
-                                                                                                date__range=[date_start,
-                                                                                                             date_end])
-        dataset_preparatory_actions = TacticaIndicator.objects.values('preparatory_actions').filter(user=id_user,
-                                                                                                    date__range=[
-                                                                                                        date_start,
-                                                                                                        date_end])
-        dataset_situational_actions = TacticaIndicator.objects.values('situational_actions').filter(user=id_user,
-                                                                                                    date__range=[
-                                                                                                        date_start,
-                                                                                                        date_end])
-        dataset_scope_tactical_action = TacticaIndicator.objects.values('scope_tactical_action').filter(user=id_user,
-                                                                                                        date__range=[
-                                                                                                            date_start,
-                                                                                                            date_end])
-
+        return render(request, 'charts/tactical_charts.html', {'formdate': form_date,
+                                                               'dataset_date': dataset[0],
+                                                               'dataset_versatility_technical_actions': dataset[1],
+                                                               'dataset_attack_efficiency': dataset[2],
+                                                               'dataset_warfare_ratio': dataset[3],
+                                                               'dataset_performance_ratio': dataset[4],
+                                                               'dataset_technical_readiness': dataset[5],
+                                                               'dataset_tactical_action': dataset[6],
+                                                               'dataset_versatility_actions': dataset[7],
+                                                               'dataset_chosen_tactics': dataset[8],
+                                                               'dataset_adjustment_factor': dataset[9],
+                                                               'dataset_preparatory_actions': dataset[10],
+                                                               'dataset_situational_actions': dataset[11],
+                                                               'dataset_scope_tactical_action': dataset[12],
+                                                               'dataset_protective_actions': dataset[13]})
     else:
-        formdate = ChartForm(post_request_chart)
-        dataset_date = ['']
-        dataset_versatility_technical_actions = []
-        dataset_attack_efficiency = []
-        dataset_protective_actions = []
-        dataset_warfare_ratio = []
-        dataset_performance_ratio = []
-        dataset_technical_readiness = []
-        dataset_tactical_action = []
-        dataset_versatility_actions = []
-        dataset_chosen_tactics = []
-        dataset_adjustment_factor = []
-        dataset_preparatory_actions = []
-        dataset_situational_actions = []
-        dataset_scope_tactical_action = []
-    return render(request, 'charts/tactical_charts.html', {'formdate': formdate,
-                                                           'dataset_date': dataset_date,
-                                                           'dataset_versatility_technical_actions': dataset_versatility_technical_actions,
-                                                           'dataset_attack_efficiency': dataset_attack_efficiency,
-                                                           'dataset_warfare_ratio': dataset_warfare_ratio,
-                                                           'dataset_performance_ratio': dataset_performance_ratio,
-                                                           'dataset_technical_readiness': dataset_technical_readiness,
-                                                           'dataset_tactical_action': dataset_tactical_action,
-                                                           'dataset_versatility_actions': dataset_versatility_actions,
-                                                           'dataset_chosen_tactics': dataset_chosen_tactics,
-                                                           'dataset_adjustment_factor': dataset_adjustment_factor,
-                                                           'dataset_preparatory_actions': dataset_preparatory_actions,
-                                                           'dataset_situational_actions': dataset_situational_actions,
-                                                           'dataset_scope_tactical_action': dataset_scope_tactical_action,
-                                                           'dataset_protective_actions': dataset_protective_actions})
+        if request.user.has_perm('indicators.add_indicator'):
+            form_date = ChartForm(post_request_chart)
+        else:
+            form_date = SportsmenChartForm(post_request_chart)
+    return render(request, 'charts/tactical_charts.html', {'formdate': form_date})
 
 
 @login_required
