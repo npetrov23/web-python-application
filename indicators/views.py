@@ -24,6 +24,20 @@ def register(request):
         user_form = UserRegistrationForm()
     return render(request, 'registration/register.html', {'user_form': user_form})
 
+def register_sportsmen(request):
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+            new_user = user_form.save(commit=False)
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.save()
+            my_group = Group.objects.get(name='Спортсмены')
+            new_user.groups.add(my_group)
+
+    else:
+        user_form = UserRegistrationForm()
+    return render(request, 'registration/register_sportsmen.html', {'user_form': user_form})
+
 def get_result(name_indicator_model, request, *indicators):
     done_indicators = []
     id_user = request.POST.get('user')

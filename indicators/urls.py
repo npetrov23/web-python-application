@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^psychological/charts/$', views.psy_charts, name='psy_charts'),
 
     url('register/', views.register, name='register'),
+    url('new_sportsmen/', views.register_sportsmen, name='register_sportsmen'),
 ]
