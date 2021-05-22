@@ -4,6 +4,7 @@ from .models import *
 from django import forms
 from datetime import date
 from django.contrib.auth.models import User
+from django_currentuser.middleware import (get_current_user, get_current_authenticated_user)
 
 
 class UserRegistrationForm(forms.ModelForm):
@@ -21,12 +22,15 @@ class UserRegistrationForm(forms.ModelForm):
         return cd['password2']
 
 class ChangeSportsmenForm(forms.ModelForm):
+    #user = forms.ModelChoiceField(queryset=Profile.objects.all())
+
     class Meta:
         model = Indicator
         fields = ('user', 'date')
         widgets = {
-            'date': forms.SelectDateWidget()
+            'date': forms.SelectDateWidget(),
         }
+
 
 
 class ForSportsmenForm(forms.ModelForm):

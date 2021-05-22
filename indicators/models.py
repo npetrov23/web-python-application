@@ -101,7 +101,10 @@ class PsyIndicator(models.Model):
 
 class Profile(models.Model):
     sportsmen = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Спортсмен', related_name='sportsmen')
-    trainer = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Принадлежит тренеру', related_name='trainer')
+    trainer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Принадлежит тренеру', related_name='trainer')
+
+    def __str__(self):
+        return str(self.sportsmen)
 
     class Meta:
         verbose_name = 'Список спортсменов у тренера'

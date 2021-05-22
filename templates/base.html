@@ -21,11 +21,10 @@
             {% if not perms.indicators.add_indicator %}
             <p>Спортсмен: {{ request.user.first_name }} {{ request.user.last_name }}</p>
             {% endif %}
+
                     {% for field in form %}
                             <div class="fieldWrapper">
-                            {# uncomment to display field errors #}
                             {# {{ field.errors }} #}
-
                             {{ field.label_tag }} {{ field }}
                             <p></p>
                         </div>

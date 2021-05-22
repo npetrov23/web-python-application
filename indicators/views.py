@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .forms import IndicatorForm, ChangeSportsmenForm, ChartForm, PhysicalIndicatorForm, PsyIndicatorForm, \
     TacticalIndicatorForm, ForSportsmenForm, SportsmenChartForm, UserRegistrationForm
 from .models import *
-
+from django import forms
 
 def register(request):
     if request.method == 'POST':
@@ -79,7 +79,9 @@ def change_user(request):
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         if request.user.has_perm('indicators.add_indicator'):
+            print(request.POST)
             form = ChangeSportsmenForm(request.POST)
+            #form.fields['user'] = forms.ModelChoiceField(queryset=Profile.objects.filter(trainer=request.user))
             request.session['post_request'] = request.POST
             if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
@@ -116,6 +118,8 @@ def change_user(request):
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(post_request)
+            #form.fields['user'] = forms.ModelChoiceField(queryset=Indicator.objects.filter(user=))
+
         else:
             form = ForSportsmenForm(post_request)
     return render(request, 'table/index.html', {'form': form,
