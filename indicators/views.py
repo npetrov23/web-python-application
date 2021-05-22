@@ -81,7 +81,7 @@ def change_user(request):
         if request.user.has_perm('indicators.add_indicator'):
             print(request.POST)
             form = ChangeSportsmenForm(request.POST)
-            #form.fields['user'] = forms.ModelChoiceField(queryset=Profile.objects.filter(trainer=request.user))
+            form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'))
             request.session['post_request'] = request.POST
             if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
@@ -118,7 +118,7 @@ def change_user(request):
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(post_request)
-            #form.fields['user'] = forms.ModelChoiceField(queryset=Indicator.objects.filter(user=))
+            form.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'))
 
         else:
             form = ForSportsmenForm(post_request)
