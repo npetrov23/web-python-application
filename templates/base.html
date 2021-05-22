@@ -13,7 +13,9 @@
 <body>
 <body>
     <div class="mx-5 p-1">
-        <p></p>
+        <p>Вы вошли, как <b>{{ user.username }}</b></p>
+    <p>Ваш тренер: <b>{{ user.profile.trainer }}</b></p>
+
     {% block forms %}
 
         <nav class="navbar navbar-light bg-light justify-content-between">

@@ -33,8 +33,8 @@ def register_sportsmen(request):
             new_user.save()
             my_group = Group.objects.get(name='Спортсмены')
             new_user.groups.add(my_group)
-            test = Profile(sportsmen=new_user, trainer=request.user)
-            test.save()
+            new_user.profile.trainer = request.user
+            new_user.save()
     else:
         user_form = UserRegistrationForm()
     return render(request, 'registration/register_sportsmen.html', {'user_form': user_form})

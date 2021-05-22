@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Indicator(models.Model):
@@ -100,12 +101,21 @@ class PsyIndicator(models.Model):
 
 
 class Profile(models.Model):
-    sportsmen = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Спортсмен', related_name='sportsmen')
-    trainer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Принадлежит тренеру', related_name='trainer')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Спортсмен', related_name='profile')
+    trainer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Относится к тренеру', related_name='trener', null=True,blank=True)
 
     def __str__(self):
-        return str(self.sportsmen)
+        return str(self.user)
 
     class Meta:
         verbose_name = 'Список спортсменов у тренера'
         verbose_name_plural = 'Список спортсменов у тренера'
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
