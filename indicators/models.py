@@ -98,3 +98,11 @@ class PsyIndicator(models.Model):
         verbose_name_plural = 'Психологическая подготовленность'
         unique_together = (('user','date'))
 
+
+class Profile(models.Model):
+    sportsmen = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Спортсмен', related_name='sportsmen')
+    trainer = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Принадлежит тренеру', related_name='trainer')
+
+    class Meta:
+        verbose_name = 'Список спортсменов у тренера'
+        verbose_name_plural = 'Список спортсменов у тренера'
