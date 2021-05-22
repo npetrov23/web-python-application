@@ -4,6 +4,8 @@ from .models import *
 from import_export.admin import ImportExportModelAdmin
 
 
+
+
 class IndicatoAdmin(admin.ModelAdmin):
     list_display = ('user', 'date')
     list_filter = ('user', 'date')

@@ -16,4 +16,6 @@ urlpatterns = [
     url(r'^physical/charts/$', views.physical_charts, name='physical_charts'),
     url(r'^tactical/charts/$', views.tactical_charts, name='tactical_charts'),
     url(r'^psychological/charts/$', views.psy_charts, name='psy_charts'),
+
+    url('register/', views.register, name='register'),
 ]

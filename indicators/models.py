@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 
 class Indicator(models.Model):
@@ -95,3 +97,4 @@ class PsyIndicator(models.Model):
         verbose_name = 'Психологическая подготовленность'
         verbose_name_plural = 'Психологическая подготовленность'
         unique_together = (('user','date'))
+
