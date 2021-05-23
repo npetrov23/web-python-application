@@ -392,10 +392,16 @@ def psy_indicator(request):
 def new_indicator(request):
     if request.method == 'POST':
         form_new_indicator = IndicatorForm(request.POST)
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         if form_new_indicator.is_valid():
             form_new_indicator.save()
     else:
         form_new_indicator = IndicatorForm()
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
     return render(request, 'add_indicator/new_indicator.html', {'form_new_indicator': form_new_indicator})
 
 
@@ -404,10 +410,16 @@ def new_indicator(request):
 def new_physical_indicator(request):
     if request.method == 'POST':
         form_new_indicator = PhysicalIndicatorForm(request.POST)
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         if form_new_indicator.is_valid():
             form_new_indicator.save()
     else:
         form_new_indicator = PhysicalIndicatorForm()
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
     return render(request, 'add_indicator/new_physical_indicator.html', {'form_new_indicator': form_new_indicator})
 
 
@@ -416,11 +428,17 @@ def new_physical_indicator(request):
 def new_tactical_indicator(request):
     if request.method == 'POST':
         form_new_indicator = TacticalIndicatorForm(request.POST)
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         request.session['post_request'] = request.POST
         if form_new_indicator.is_valid():
             form_new_indicator.save()
     else:
         form_new_indicator = TacticalIndicatorForm()
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
     return render(request, 'add_indicator/new_tactical_indicator.html', {'form_new_indicator': form_new_indicator})
 
 
@@ -429,11 +447,17 @@ def new_tactical_indicator(request):
 def new_psy_indicator(request):
     if request.method == 'POST':
         form_new_indicator = PsyIndicatorForm(request.POST)
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         request.session['post_request'] = request.POST
         if form_new_indicator.is_valid():
             form_new_indicator.save()
     else:
         form_new_indicator = PsyIndicatorForm()
+        form_new_indicator.fields['user'] = forms.ModelChoiceField(
+            queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
     return render(request, 'add_indicator/new_psy_indicator.html', {'form_new_indicator': form_new_indicator})
 
 
@@ -444,6 +468,9 @@ def charts(request):
         request.session['post_request_chart'] = request.POST
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(request.POST)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
             dataset = get_result_chart(Indicator, request, request.POST.get('user'), 'pulse_rate', 'index_of_rufe'
                                        , 'coefficient_of_endurance', 'blood_circulation', 'orthostatic_test',
                                        'clinostatic_test', 'rosenthal_test')
@@ -465,6 +492,9 @@ def charts(request):
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(post_request_chart)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/charts.html', {'formdate': form_date})
@@ -477,6 +507,9 @@ def physical_charts(request):
         request.session['post_request_chart'] = request.POST
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(request.POST)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
             dataset = get_result_chart(PhysicalIndicator, request, request.POST.get('user'), 'pullups', 'push_ups',
                                        'long_jump',
                                        'acceleration', 'six_minute_run', 'shuttle_run',
@@ -508,6 +541,9 @@ def physical_charts(request):
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(post_request_chart)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/physical_charts.html', {'formdate': form_date})
@@ -520,6 +556,9 @@ def tactical_charts(request):
         request.session['post_request_chart'] = request.POST
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(request.POST)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
             dataset = get_result_chart(TacticaIndicator, request, request.POST.get('user'),
                                        'versatility_technical_actions',
                                        'attack_efficiency', 'warfare_ratio',
@@ -554,6 +593,9 @@ def tactical_charts(request):
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(post_request_chart)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/tactical_charts.html', {'formdate': form_date})
@@ -566,6 +608,9 @@ def psy_charts(request):
         request.session['post_request_chart'] = request.POST
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(request.POST)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
             dataset = get_result_chart(PsyIndicator, request, request.POST.get('user'), 'thermometer_test',
                                        'second_test',
                                        'persistence_ratio', 'courage_ratio', 'emotional_stability')
@@ -584,6 +629,9 @@ def psy_charts(request):
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form_date = ChartForm(post_request_chart)
+            form_date.fields['user'] = forms.ModelChoiceField(
+                queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
+            label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/psy_charts.html', {'formdate': form_date})

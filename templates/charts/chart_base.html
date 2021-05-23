@@ -16,7 +16,7 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <div class="mx-5 p-1">
-        <p></p>
+        <p>Вы вошли, как <b>{{ user.username }}</b></p>
 
     {% block forms %}
         <nav class="navbar navbar-light bg-light justify-content-between">
@@ -44,6 +44,9 @@
                 {% if perms.indicators.add_indicator %}
                 <form action="{% url 'new' %}">
                     <button type="submit" class="btn btn-primary btn-sm mr-1" ><i class="fas fa-plus"></i> Добавить показатели</button>
+                </form>
+                <form action="{% url 'register_sportsmen' %}">
+                    <button type="submit" class="btn btn-primary btn-sm mr-1" ><i class="fas fa-user-alt"></i>  Добавить спортсмена</button>
                 </form>
                 {% endif %}
 
