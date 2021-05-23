@@ -111,6 +111,11 @@ class Profile(models.Model):
         verbose_name = 'Список спортсменов у тренера'
         verbose_name_plural = 'Список спортсменов у тренера'
 
+def get_name(self):
+    return '{} {}'.format(self.first_name, self.last_name)
+
+User.add_to_class("__str__", get_name)
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
