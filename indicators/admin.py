@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import admin
 from import_export import resources
 from .models import *
@@ -12,19 +14,21 @@ class IndicatoAdmin(admin.ModelAdmin):
 
 
 class PhysicalIndicatorExportImport(resources.ModelResource):
+
     class Meta:
         model = PhysicalIndicator
         widgets = {
-                'date': {'format': '%d.%m.%Y'},
+                'date': {'format': '%d/%m/%y'},
                 }
 
 
 class PhysicalIndicatorAdm(ImportExportModelAdmin):
     resource_class = PhysicalIndicatorExportImport
+    list_display = ('user', 'date')
+    list_filter = ('user', 'date')
 
-
-admin.site.register(Indicator, IndicatoAdmin)
+admin.site.register(Indicator, PhysicalIndicatorAdm)
 admin.site.register(PhysicalIndicator, PhysicalIndicatorAdm)
-admin.site.register(TacticaIndicator, IndicatoAdmin)
-admin.site.register(PsyIndicator, IndicatoAdmin)
-admin.site.register(Profile)
+admin.site.register(TacticaIndicator, PhysicalIndicatorAdm)
+admin.site.register(PsyIndicator, PhysicalIndicatorAdm)
+#admin.site.register(Profile)
