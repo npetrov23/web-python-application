@@ -14,8 +14,11 @@
             </div>
         {% endfor %}
         <div class="col-md-6 offset-md-4">
-            <p><input type="submit" class="btn btn-primary" value="Добавить спортсмена"></p>
-            <input type="hidden" name="next" value="{{ next }}" />
+            <div class="btn-group" role="group" aria-label="Third group">
+                <p><input type="submit" class="btn btn-primary btn-success mr-1" value="Добавить спортсмена"></p>
+                <p><a class="btn btn-primary btn-danger" href="{% url 'index' %}" role="button">Вернуться</a></p>
+                <input type="hidden" name="next" value="{{ next }}" />
+            </div>
         </div>
     </form>
     </div>
