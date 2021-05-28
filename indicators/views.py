@@ -50,7 +50,6 @@ def get_result(name_indicator_model, request, *indicators):
         value = name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0]
         obj = Grade.objects.filter(indicator=name_indicator_model._meta.get_field(str(indicator)).verbose_name.title(),
                                    category=category, trainer=request.user)
-        print(PsyIndicator._meta.get_field(str(indicator)).verbose_name.title())
         if obj:
             if value in range(getattr(obj[0], 'excellent'), getattr(obj[0], 'excellent_border')):
                 grade = 5
