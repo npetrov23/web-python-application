@@ -50,6 +50,7 @@ def get_result(name_indicator_model, request, *indicators):
         value = name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0]
         obj = Grade.objects.filter(indicator=name_indicator_model._meta.get_field(str(indicator)).verbose_name.title(),
                                    category=category, trainer=request.user)
+        print(PsyIndicator._meta.get_field(str(indicator)).verbose_name.title())
         if obj:
             if value in range(getattr(obj[0], 'excellent'), getattr(obj[0], 'excellent_border')):
                 grade = 5
@@ -235,7 +236,7 @@ def physical_indicator(request):
             if PhysicalIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.user):
-                physical_indicators_tuple = get_result_sportsmen(PhysicalIndicator, request.user, request, 'pullups',
+                physical_indicators_tuple, grade = get_result_sportsmen(PhysicalIndicator, request.user, request, 'pullups',
                                                                  'push_ups',
                                                                  'sit_up', 'long_jump', 'acceleration',
                                                                  'six_minute_run',
@@ -256,7 +257,16 @@ def physical_indicator(request):
                                'flexibility': physical_indicators_tuple[10],
                                'coordination': physical_indicators_tuple[11],
                                'physical_fitness': physical_indicators_tuple[12],
-                               'endurance': physical_indicators_tuple[13]})
+                               'endurance': physical_indicators_tuple[13],
+                                'grade_pullups': grade[0],
+                               'grade_push_ups': grade[1], 'grade_sit_up': grade[2],
+                               'grade_long_jump': grade[3], 'grade_acceleration': grade[4],
+                               'grade_six_minute_run': grade[5], 'grade_shuttle_run': grade[6],
+                               'grade_bridge': grade[7], 'grade_twine': grade[8],
+                               'grade_blow_strength': grade[9], 'grade_flexibility': grade[10],
+                               'grade_coordination': grade[11], 'grade_physical_fitness': grade[12],
+                               'grade_endurance': grade[13]
+                               })
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(post_request)
@@ -296,7 +306,7 @@ def tactical_indicator(request):
             if TacticaIndicator.objects.filter(user=request.POST.get('user')) and TacticaIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
-                tactical_indicators_tuple = get_result(TacticaIndicator, request, 'versatility_technical_actions',
+                tactical_indicators_tuple, grade = get_result(TacticaIndicator, request, 'versatility_technical_actions',
                                                        'warfare_ratio',
                                                        'performance_ratio', 'technical_readiness', 'tactical_action',
                                                        'versatility_actions', 'chosen_tactics', 'adjustment_factor',
@@ -327,14 +337,22 @@ def tactical_indicator(request):
                                                                            tactical_indicators_tuple[
                                                                                11],
                                                                        'protective_actions': tactical_indicators_tuple[
-                                                                           12]})
+                                                                           12],
+                                                                       'grade_versatility_technical_actions': grade[0],
+                               'grade_warfare_ratio': grade[1], 'grade_performance_ratio': grade[2],
+                               'grade_technical_readiness': grade[3], 'grade_tactical_action': grade[4],
+                               'grade_versatility_actions': grade[5], 'grade_chosen_tactics': grade[6],
+                               'grade_adjustment_factor': grade[7], 'grade_preparatory_actions': grade[8],
+                               'grade_situational_actions': grade[9], 'grade_attack_efficiency': grade[10],
+                               'grade_scope_tactical_action': grade[11], 'grade_protective_actions': grade[12],
+                               })
         else:
             form = ForSportsmenForm(request.POST)
             request.session['post_request'] = request.POST
             if TacticaIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.user):
-                tactical_indicators_tuple = get_result_sportsmen(TacticaIndicator, request.user, request,
+                tactical_indicators_tuple, grade = get_result_sportsmen(TacticaIndicator, request.user, request,
                                                                  'versatility_technical_actions',
                                                                  'warfare_ratio',
                                                                  'performance_ratio', 'technical_readiness',
@@ -368,7 +386,14 @@ def tactical_indicator(request):
                                                                            tactical_indicators_tuple[
                                                                                11],
                                                                        'protective_actions': tactical_indicators_tuple[
-                                                                           12]})
+                                                                           12],'grade_versatility_technical_actions': grade[0],
+                               'grade_warfare_ratio': grade[1], 'grade_performance_ratio': grade[2],
+                               'grade_technical_readiness': grade[3], 'grade_tactical_action': grade[4],
+                               'grade_versatility_actions': grade[5], 'grade_chosen_tactics': grade[6],
+                               'grade_adjustment_factor': grade[7], 'grade_preparatory_actions': grade[8],
+                               'grade_situational_actions': grade[9], 'grade_attack_efficiency': grade[10],
+                               'grade_scope_tactical_action': grade[11], 'grade_protective_actions': grade[12],
+                               })
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(post_request)
@@ -406,21 +431,25 @@ def psy_indicator(request):
             if PsyIndicator.objects.filter(user=request.POST.get('user')) and PsyIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
-                psy_indicators_tuple = get_result(PsyIndicator, request, 'thermometer_test', 'second_test',
+                psy_indicators_tuple, grade = get_result(PsyIndicator, request, 'thermometer_test', 'second_test',
                                                   'persistence_ratio', 'courage_ratio', 'emotional_stability')
                 return render(request, 'table/PsychologicalTraining.html',
                               {'form': form, 'thermometer_test': psy_indicators_tuple[0],
                                'second_test': psy_indicators_tuple[1],
                                'persistence_ratio': psy_indicators_tuple[2],
                                'courage_ratio': psy_indicators_tuple[3],
-                               'emotional_stability': psy_indicators_tuple[4]})
+                               'emotional_stability': psy_indicators_tuple[4],
+                               'grade_thermometer_test': grade[0],
+                               'grade_second_test': grade[1], 'grade_persistence_ratio': grade[2],
+                               'grade_courage_ratio': grade[3], 'grade_emotional_stability': grade[4],
+                               })
         else:
             form = ForSportsmenForm(request.POST)
             request.session['post_request'] = request.POST
             if PsyIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.user):
-                psy_indicators_tuple = get_result_sportsmen(PsyIndicator, request.user, request, 'thermometer_test',
+                psy_indicators_tuple, grade = get_result_sportsmen(PsyIndicator, request.user, request, 'thermometer_test',
                                                             'second_test',
                                                             'persistence_ratio', 'courage_ratio', 'emotional_stability')
                 return render(request, 'table/PsychologicalTraining.html',
@@ -428,7 +457,11 @@ def psy_indicator(request):
                                'second_test': psy_indicators_tuple[1],
                                'persistence_ratio': psy_indicators_tuple[2],
                                'courage_ratio': psy_indicators_tuple[3],
-                               'emotional_stability': psy_indicators_tuple[4]})
+                               'emotional_stability': psy_indicators_tuple[4],
+                               'grade_thermometer_test': grade[0],
+                               'grade_second_test': grade[1], 'grade_persistence_ratio': grade[2],
+                               'grade_courage_ratio': grade[3], 'grade_emotional_stability': grade[4],
+                               })
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(post_request)
