@@ -100,13 +100,6 @@ class PsyIndicator(models.Model):
         unique_together = (('user','date'))
 
 
-class ListIndicator(models.Model):
-    name_indicator = models.CharField(max_length=256, primary_key=True)
-
-    def __str__(self):
-        return str(self.name_indicator)
-
-
 class Grade(models.Model):
     indicator = models.CharField(verbose_name='Статистический показатель', max_length=256, null=True, blank=True, default='ЧПП')
     category = models.CharField(verbose_name='Категория', max_length=256)

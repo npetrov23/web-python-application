@@ -45,11 +45,12 @@ def get_result(name_indicator_model, request, *indicators):
     id_user = request.POST.get('user')
     date = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
         request.POST.get('date_day'))
+    category = request.POST.get('category')
     for indicator in indicators:
         value = name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0]
-        obj = Grade.objects.filter(indicator = Indicator._meta.get_field(str(indicator)).verbose_name.title())
-        #print(Indicator._meta.get_field(str(indicator)).verbose_name.title())
-        if(obj):
+        obj = Grade.objects.filter(indicator=Indicator._meta.get_field(str(indicator)).verbose_name.title(),
+                                   category=category)
+        if obj:
             excellent = getattr(obj[0], 'excellent')
             okay = getattr(obj[0], 'okay')
             fine = getattr(obj[0], 'fine')
@@ -77,7 +78,6 @@ def get_result(name_indicator_model, request, *indicators):
 
         done_indicators.append(value)
         format_grade.append(grade)
-        print(format_grade)
     return done_indicators, format_grade
 
 
@@ -109,6 +109,7 @@ def get_result_chart(name_indicator_model, request, user, *indicators):
 def change_user(request):
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
+        print(request.POST)
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(request.POST)
             form.fields['user'] = forms.ModelChoiceField(
@@ -130,7 +131,13 @@ def change_user(request):
                                                             'clinostatic_test': func_indicators_tuple[5],
                                                             'rosenthal_test': func_indicators_tuple[6],
                                                             'grade_pulse_rate': grade[0],
-                                                            'grade_index_of_rufe': grade[1]})
+                                                            'grade_index_of_rufe': grade[1],
+                                                            'grade_coefficient_of_endurance': grade[2],
+                                                            'grade_blood_circulation': grade[3],
+                                                            'grade_orthostatic_test': grade[4],
+                                                            'grade_clinostatic_test': grade[5],
+                                                            'grade_rosenthal_test': grade[6],
+                                                            })
         else:
             form = ForSportsmenForm(request.POST)
             request.session['post_request'] = request.POST

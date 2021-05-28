@@ -19,6 +19,7 @@
 
         <nav class="navbar navbar-light bg-light justify-content-between">
             <form method="POST" class="post-form">{% csrf_token %}
+
             {% if not perms.indicators.add_indicator %}
             <p>Спортсмен: {{ request.user.first_name }} {{ request.user.last_name }}</p>
             {% endif %}

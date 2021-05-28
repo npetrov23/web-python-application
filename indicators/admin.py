@@ -32,5 +32,5 @@ admin.site.register(PhysicalIndicator, PhysicalIndicatorAdm)
 admin.site.register(TacticaIndicator, PhysicalIndicatorAdm)
 admin.site.register(PsyIndicator, PhysicalIndicatorAdm)
 admin.site.register(Grade)
-admin.site.register(ListIndicator)
+
 #admin.site.register(Profile)
