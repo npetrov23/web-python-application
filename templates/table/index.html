@@ -14,7 +14,9 @@
                     <tr>
                       <th scope="col">Название показателя</th>
                       <th scope="col">Результат</th>
-                      <th scope="col">Оценка</th>
+                      <th scope="col">Оценка
+                          {% if perms.indicators.add_indicator %}[<a href="{% url 'grade' %}">
+                              Настроить форматирование</a>]{% endif %}</th>
                     </tr>
                   </thead>
                 <tbody>

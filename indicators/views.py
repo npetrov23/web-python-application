@@ -49,29 +49,20 @@ def get_result(name_indicator_model, request, *indicators):
     for indicator in indicators:
         value = name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0]
         obj = Grade.objects.filter(indicator=Indicator._meta.get_field(str(indicator)).verbose_name.title(),
-                                   category=category)
+                                   category=category, trainer=request.user)
         if obj:
-            excellent = getattr(obj[0], 'excellent')
-            okay = getattr(obj[0], 'okay')
-            fine = getattr(obj[0], 'fine')
-            satisfactorily = getattr(obj[0], 'satisfactorily')
-            unsatisfactory = getattr(obj[0], 'unsatisfactory')
-            excellent_border = getattr(obj[0], 'excellent_border')
-            okay_border = getattr(obj[0], 'okay_border')
-            fine_border = getattr(obj[0], 'fine_border')
-            satisfactorily_border = getattr(obj[0], 'satisfactorily_border')
-            unsatisfactory_border = getattr(obj[0], 'unsatisfactory_border')
-            grade = 0
-            if value in range(excellent, excellent_border):
+            if value in range(getattr(obj[0], 'excellent'), getattr(obj[0], 'excellent_border')):
                 grade = 5
-            elif value in range(okay, okay_border + 1):
+            elif value in range(getattr(obj[0], 'okay'), getattr(obj[0], 'okay_border') + 1):
                 grade = 4
-            elif value in range(fine, fine_border + 1):
+            elif value in range(getattr(obj[0], 'fine'), getattr(obj[0], 'fine_border') + 1):
                 grade = 3
-            elif value in range(satisfactorily, satisfactorily_border + 1):
+            elif value in range(getattr(obj[0], 'satisfactorily'), getattr(obj[0], 'satisfactorily_border')):
                 grade = 2
-            else:
+            elif value in range(getattr(obj[0], 'unsatisfactory'), getattr(obj[0], 'unsatisfactory_border')):
                 grade = 1
+            else:
+                grade = 'Выход за указанный диапазон'
 
         else:
             grade = 'Форматирование оценки не определено'
@@ -83,12 +74,35 @@ def get_result(name_indicator_model, request, *indicators):
 
 def get_result_sportsmen(name_indicator_model, user, request, *indicators):
     done_indicators = []
+    format_grade = []
+    print(user.profile.trainer)
     date = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
         request.POST.get('date_day'))
+    category = request.POST.get('category')
     for indicator in indicators:
-        done_indicators.append(
-            name_indicator_model.objects.filter(date=date, user=user).values_list(str(indicator), flat=True)[0])
-    return done_indicators
+        value = name_indicator_model.objects.filter(date=date, user=user).values_list(str(indicator), flat=True)[0]
+        obj = Grade.objects.filter(indicator=Indicator._meta.get_field(str(indicator)).verbose_name.title(),
+                                   category=category, trainer=user.profile.trainer)
+        if obj:
+            if value in range(getattr(obj[0], 'excellent'), getattr(obj[0], 'excellent_border')):
+                grade = 5
+            elif value in range(getattr(obj[0], 'okay'), getattr(obj[0], 'okay_border') + 1):
+                grade = 4
+            elif value in range(getattr(obj[0], 'fine'), getattr(obj[0], 'fine_border') + 1):
+                grade = 3
+            elif value in range(getattr(obj[0], 'satisfactorily'), getattr(obj[0], 'satisfactorily_border')):
+                grade = 2
+            elif value in range(getattr(obj[0], 'unsatisfactory'), getattr(obj[0], 'unsatisfactory_border')):
+                grade = 1
+            else:
+                grade = 'Выход за указанный диапазон'
+
+        else:
+            grade = 'Форматирование оценки не определено'
+
+        done_indicators.append(value)
+        format_grade.append(grade)
+    return done_indicators, format_grade
 
 
 def get_result_chart(name_indicator_model, request, user, *indicators):
@@ -122,40 +136,33 @@ def change_user(request):
                 func_indicators_tuple, grade = get_result(Indicator, request, 'pulse_rate', 'index_of_rufe',
                                                    'coefficient_of_endurance', 'blood_circulation',
                                                    'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
-                return render(request, 'table/index.html', {'form': form,
-                                                            'pulse_rate': func_indicators_tuple[0],
-                                                            'index_of_rufe': func_indicators_tuple[1],
-                                                            'coefficient_of_endurance': func_indicators_tuple[2],
-                                                            'blood_circulation': func_indicators_tuple[3],
-                                                            'orthostatic_test': func_indicators_tuple[4],
-                                                            'clinostatic_test': func_indicators_tuple[5],
-                                                            'rosenthal_test': func_indicators_tuple[6],
-                                                            'grade_pulse_rate': grade[0],
-                                                            'grade_index_of_rufe': grade[1],
-                                                            'grade_coefficient_of_endurance': grade[2],
-                                                            'grade_blood_circulation': grade[3],
-                                                            'grade_orthostatic_test': grade[4],
-                                                            'grade_clinostatic_test': grade[5],
-                                                            'grade_rosenthal_test': grade[6],
-                                                            })
+                context = {'form': form, 'pulse_rate': func_indicators_tuple[0], 'index_of_rufe': func_indicators_tuple[1],
+                           'coefficient_of_endurance': func_indicators_tuple[2], 'blood_circulation': func_indicators_tuple[3],
+                           'orthostatic_test': func_indicators_tuple[4], 'clinostatic_test': func_indicators_tuple[5],
+                           'rosenthal_test': func_indicators_tuple[6], 'grade_pulse_rate': grade[0],
+                           'grade_index_of_rufe': grade[1], 'grade_coefficient_of_endurance': grade[2],
+                           'grade_blood_circulation': grade[3], 'grade_orthostatic_test': grade[4],
+                           'grade_clinostatic_test': grade[5], 'grade_rosenthal_test': grade[6]}
+
+                return render(request, 'table/index.html', context)
         else:
             form = ForSportsmenForm(request.POST)
             request.session['post_request'] = request.POST
             if Indicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.user):
-                func_indicators_tuple = get_result_sportsmen(Indicator, request.user, request, 'pulse_rate',
+                func_indicators_tuple, grade = get_result_sportsmen(Indicator, request.user, request, 'pulse_rate',
                                                              'index_of_rufe',
                                                              'coefficient_of_endurance', 'blood_circulation',
                                                              'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
-                return render(request, 'table/index.html', {'form': form,
-                                                            'pulse_rate': func_indicators_tuple[0],
-                                                            'index_of_rufe': func_indicators_tuple[1],
-                                                            'coefficient_of_endurance': func_indicators_tuple[2],
-                                                            'blood_circulation': func_indicators_tuple[3],
-                                                            'orthostatic_test': func_indicators_tuple[4],
-                                                            'clinostatic_test': func_indicators_tuple[5],
-                                                            'rosenthal_test': func_indicators_tuple[6]})
+                context = {'form': form, 'pulse_rate': func_indicators_tuple[0], 'index_of_rufe': func_indicators_tuple[1],
+                           'coefficient_of_endurance': func_indicators_tuple[2], 'blood_circulation': func_indicators_tuple[3],
+                           'orthostatic_test': func_indicators_tuple[4], 'clinostatic_test': func_indicators_tuple[5],
+                           'rosenthal_test': func_indicators_tuple[6], 'grade_pulse_rate': grade[0],
+                           'grade_index_of_rufe': grade[1], 'grade_coefficient_of_endurance': grade[2],
+                           'grade_blood_circulation': grade[3], 'grade_orthostatic_test': grade[4],
+                           'grade_clinostatic_test': grade[5], 'grade_rosenthal_test': grade[6]}
+                return render(request, 'table/index.html', context)
     else:
         if request.user.has_perm('indicators.add_indicator'):
             form = ChangeSportsmenForm(post_request)

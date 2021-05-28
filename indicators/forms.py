@@ -51,6 +51,8 @@ class ChangeSportsmenForm(forms.ModelForm):
 
 
 class ForSportsmenForm(forms.ModelForm):
+    category = forms.ChoiceField(choices=CATEGORY, label='Категория')
+
     class Meta:
         model = Indicator
         fields = ('date',)
