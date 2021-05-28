@@ -103,19 +103,24 @@ class PsyIndicator(models.Model):
 class Grade(models.Model):
     indicator = models.CharField(verbose_name='Статистический показатель', max_length=256, null=True, blank=True, default='ЧПП')
     category = models.CharField(verbose_name='Категория', max_length=256)
-    excellent = models.IntegerField(verbose_name='Отлично', null=True, blank=True, default=0)
-    okay = models.IntegerField(verbose_name='Хорошо', null=True, blank=True, default=0)
-    fine = models.IntegerField(verbose_name='Нормально', null=True, blank=True, default=0)
-    satisfactorily = models.IntegerField(verbose_name='Удовлитворительно', null=True, blank=True, default=0)
-    unsatisfactory = models.IntegerField(verbose_name='Неудовлетворительно', null=True, blank=True, default=0)
-    excellent_border = models.IntegerField(verbose_name='Отлично', null=True, blank=True, default=0)
-    okay_border = models.IntegerField(verbose_name='Хорошо', null=True, blank=True, default=0)
-    fine_border = models.IntegerField(verbose_name='Нормально', null=True, blank=True, default=0)
-    satisfactorily_border = models.IntegerField(verbose_name='Удовлитворительно', null=True, blank=True, default=0)
-    unsatisfactory_border = models.IntegerField(verbose_name='Неудовлетворительно', null=True, blank=True, default=0)
+    trainer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Тренер', null=True, blank=True)
+    excellent = models.IntegerField(verbose_name='Нижняя граница оценки "Отлично"', null=True, blank=True, default=0)
+    excellent_border = models.IntegerField(verbose_name='Верхняя граница оценки "Отлично"', null=True, blank=True, default=0)
+    okay = models.IntegerField(verbose_name='Нижняя граница оценки "Хорошо"', null=True, blank=True, default=0)
+    okay_border = models.IntegerField(verbose_name='Верхняя граница оценки "Хорошо"', null=True, blank=True, default=0)
+    fine = models.IntegerField(verbose_name='Нижняя граница оценки "Нормально"', null=True, blank=True, default=0)
+    fine_border = models.IntegerField(verbose_name='Верхняя граница оценки "Нормально"', null=True, blank=True, default=0)
+    satisfactorily = models.IntegerField(verbose_name='Нижняя граница оценки "Удовлитворительно"', null=True, blank=True, default=0)
+    satisfactorily_border = models.IntegerField(verbose_name='Верхняя граница оценки "Удовлитворительно"', null=True, blank=True, default=0)
+    unsatisfactory = models.IntegerField(verbose_name='Нижняя граница оценки "Неудовлетворительно"', null=True, blank=True, default=0)
+    unsatisfactory_border = models.IntegerField(verbose_name='Верхняя граница оценки "Неудовлетворительно"', null=True, blank=True, default=0)
 
     def __str__(self):
-        return str(self.indicator)
+        return '{0} ({1}), Тренер - {2}'.format(str(self.indicator), str(self.category), str(self.trainer))
+
+    class Meta:
+        verbose_name = 'Форматирование оценки'
+        verbose_name_plural = 'Форматирование оценок'
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Спортсмен', related_name='profile')

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render
 from .forms import IndicatorForm, ChangeSportsmenForm, ChartForm, PhysicalIndicatorForm, PsyIndicatorForm, \
-    TacticalIndicatorForm, ForSportsmenForm, SportsmenChartForm, UserRegistrationForm
+    TacticalIndicatorForm, ForSportsmenForm, SportsmenChartForm, UserRegistrationForm, ChangeCategoryForm
 from .models import *
 from django import forms
 
@@ -422,6 +422,21 @@ def psy_indicator(request):
                                                                 'courage_ratio': 'Данные не указаны',
                                                                 'emotional_stability': 'Данные не указаны'})
 
+
+@login_required
+@permission_required('indicators.add_indicator')
+def grade_formatting(request):
+    if request.method == 'POST':
+
+        form_grade_formatting = ChangeCategoryForm(request.POST)
+        if form_grade_formatting.is_valid():
+            trainer_field = form_grade_formatting.save(commit=False)
+            trainer_field.trainer = request.user
+            trainer_field.save()
+    else:
+        form_grade_formatting = ChangeCategoryForm()
+
+    return render(request, 'grade_formatting.html', {'form_grade_formatting': form_grade_formatting})
 
 @login_required
 @permission_required('indicators.add_indicator')

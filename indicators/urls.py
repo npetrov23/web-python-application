@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^tactical/charts/$', views.tactical_charts, name='tactical_charts'),
     url(r'^psychological/charts/$', views.psy_charts, name='psy_charts'),
 
+    url(r'^grade/$', views.grade_formatting, name='grade'),
+
     url('register/', views.register, name='register'),
     url('new_sportsmen/', views.register_sportsmen, name='register_sportsmen'),
 ]

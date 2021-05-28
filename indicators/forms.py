@@ -19,14 +19,24 @@ class UserRegistrationForm(forms.ModelForm):
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
 
+INDICATORS_NAME = (
+    ("Чпп", "Чпп"),
+    ("Проба Руффье", "Проба Руффье"),
+    ("Взрослые", "Взрослые"),
+)
 
-# iterable
 CATEGORY = (
     ("Юноши и девушки", "Юноши и девушки"),
     ("Юниоры и юниорки", "Юниоры и юниорки"),
     ("Взрослые", "Взрослые"),
 )
 
+class ChangeCategoryForm(forms.ModelForm):
+    indicator = forms.ChoiceField(choices=INDICATORS_NAME, label='Статистический показатель')
+    category = forms.ChoiceField(choices=CATEGORY, label='Категория')
+    class Meta:
+        model = Grade
+        exclude = ('trainer',)
 
 class ChangeSportsmenForm(forms.ModelForm):
     category = forms.ChoiceField(choices=CATEGORY, label='Категория')
