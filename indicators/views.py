@@ -11,11 +11,8 @@ def register(request):
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
-            # Create a new user object but avoid saving it yet
             new_user = user_form.save(commit=False)
-            # Set the chosen password
             new_user.set_password(user_form.cleaned_data['password'])
-            # Save the User object
             new_user.save()
             my_group = Group.objects.get(name='Тренера')
             new_user.groups.add(my_group)
@@ -44,13 +41,44 @@ def register_sportsmen(request):
 
 def get_result(name_indicator_model, request, *indicators):
     done_indicators = []
+    format_grade = []
     id_user = request.POST.get('user')
     date = str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) + '-' + str(
         request.POST.get('date_day'))
     for indicator in indicators:
-        done_indicators.append(
-            name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0])
-    return done_indicators
+        value = name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0]
+        obj = Grade.objects.filter(indicator = Indicator._meta.get_field(str(indicator)).verbose_name.title())
+        #print(Indicator._meta.get_field(str(indicator)).verbose_name.title())
+        if(obj):
+            excellent = getattr(obj[0], 'excellent')
+            okay = getattr(obj[0], 'okay')
+            fine = getattr(obj[0], 'fine')
+            satisfactorily = getattr(obj[0], 'satisfactorily')
+            unsatisfactory = getattr(obj[0], 'unsatisfactory')
+            excellent_border = getattr(obj[0], 'excellent_border')
+            okay_border = getattr(obj[0], 'okay_border')
+            fine_border = getattr(obj[0], 'fine_border')
+            satisfactorily_border = getattr(obj[0], 'satisfactorily_border')
+            unsatisfactory_border = getattr(obj[0], 'unsatisfactory_border')
+            grade = 0
+            if value in range(excellent, excellent_border):
+                grade = 5
+            elif value in range(okay, okay_border + 1):
+                grade = 4
+            elif value in range(fine, fine_border + 1):
+                grade = 3
+            elif value in range(satisfactorily, satisfactorily_border + 1):
+                grade = 2
+            else:
+                grade = 1
+
+        else:
+            grade = 'Форматирование оценки не определено'
+
+        done_indicators.append(value)
+        format_grade.append(grade)
+        print(format_grade)
+    return done_indicators, format_grade
 
 
 def get_result_sportsmen(name_indicator_model, user, request, *indicators):
@@ -82,7 +110,6 @@ def change_user(request):
     post_request = request.session.get('post_request', None)
     if request.method == 'POST':
         if request.user.has_perm('indicators.add_indicator'):
-            print(request.POST)
             form = ChangeSportsmenForm(request.POST)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
@@ -91,7 +118,7 @@ def change_user(request):
             if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
-                func_indicators_tuple = get_result(Indicator, request, 'pulse_rate', 'index_of_rufe',
+                func_indicators_tuple, grade = get_result(Indicator, request, 'pulse_rate', 'index_of_rufe',
                                                    'coefficient_of_endurance', 'blood_circulation',
                                                    'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
                 return render(request, 'table/index.html', {'form': form,
@@ -101,7 +128,9 @@ def change_user(request):
                                                             'blood_circulation': func_indicators_tuple[3],
                                                             'orthostatic_test': func_indicators_tuple[4],
                                                             'clinostatic_test': func_indicators_tuple[5],
-                                                            'rosenthal_test': func_indicators_tuple[6]})
+                                                            'rosenthal_test': func_indicators_tuple[6],
+                                                            'grade_pulse_rate': grade[0],
+                                                            'grade_index_of_rufe': grade[1]})
         else:
             form = ForSportsmenForm(request.POST)
             request.session['post_request'] = request.POST

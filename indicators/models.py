@@ -8,7 +8,7 @@ from django.dispatch import receiver
 class Indicator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Спортсмен')
     date = models.DateField(verbose_name='Дата норматива',default='2012-04-12')
-    pulse_rate = models.IntegerField(verbose_name='ЧПП - в покое', null=True, blank=True, default=0)
+    pulse_rate = models.IntegerField(verbose_name='ЧПП', null=True, blank=True, default=0)
     index_of_rufe = models.IntegerField(verbose_name='Проба Руффье', null=True, blank=True, default=0)
     coefficient_of_endurance = models.FloatField(verbose_name='Коэффициент выносливости',null=True, blank=True, default=0)
     blood_circulation = models.IntegerField(verbose_name='Коэффициент экономичности кровообращения',null=True, blank=True, default=0)
@@ -99,6 +99,30 @@ class PsyIndicator(models.Model):
         verbose_name_plural = 'Психологическая подготовленность'
         unique_together = (('user','date'))
 
+
+class ListIndicator(models.Model):
+    name_indicator = models.CharField(max_length=256, primary_key=True)
+
+    def __str__(self):
+        return str(self.name_indicator)
+
+
+class Grade(models.Model):
+    indicator = models.CharField(verbose_name='Статистический показатель', max_length=256, null=True, blank=True, default='ЧПП')
+    category = models.CharField(verbose_name='Категория', max_length=256)
+    excellent = models.IntegerField(verbose_name='Отлично', null=True, blank=True, default=0)
+    okay = models.IntegerField(verbose_name='Хорошо', null=True, blank=True, default=0)
+    fine = models.IntegerField(verbose_name='Нормально', null=True, blank=True, default=0)
+    satisfactorily = models.IntegerField(verbose_name='Удовлитворительно', null=True, blank=True, default=0)
+    unsatisfactory = models.IntegerField(verbose_name='Неудовлетворительно', null=True, blank=True, default=0)
+    excellent_border = models.IntegerField(verbose_name='Отлично', null=True, blank=True, default=0)
+    okay_border = models.IntegerField(verbose_name='Хорошо', null=True, blank=True, default=0)
+    fine_border = models.IntegerField(verbose_name='Нормально', null=True, blank=True, default=0)
+    satisfactorily_border = models.IntegerField(verbose_name='Удовлитворительно', null=True, blank=True, default=0)
+    unsatisfactory_border = models.IntegerField(verbose_name='Неудовлетворительно', null=True, blank=True, default=0)
+
+    def __str__(self):
+        return str(self.indicator)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Спортсмен', related_name='profile')

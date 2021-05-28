@@ -1,10 +1,7 @@
-
-
 from .models import *
 from django import forms
 from datetime import date
 from django.contrib.auth.models import User
-from django_currentuser.middleware import (get_current_user, get_current_authenticated_user)
 
 
 class UserRegistrationForm(forms.ModelForm):
