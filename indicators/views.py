@@ -48,7 +48,7 @@ def get_result(name_indicator_model, request, *indicators):
     category = request.POST.get('category')
     for indicator in indicators:
         value = name_indicator_model.objects.filter(date=date, user=id_user).values_list(str(indicator), flat=True)[0]
-        obj = Grade.objects.filter(indicator=Indicator._meta.get_field(str(indicator)).verbose_name.title(),
+        obj = Grade.objects.filter(indicator=name_indicator_model._meta.get_field(str(indicator)).verbose_name.title(),
                                    category=category, trainer=request.user)
         if obj:
             if value in range(getattr(obj[0], 'excellent'), getattr(obj[0], 'excellent_border')):
@@ -81,7 +81,7 @@ def get_result_sportsmen(name_indicator_model, user, request, *indicators):
     category = request.POST.get('category')
     for indicator in indicators:
         value = name_indicator_model.objects.filter(date=date, user=user).values_list(str(indicator), flat=True)[0]
-        obj = Grade.objects.filter(indicator=Indicator._meta.get_field(str(indicator)).verbose_name.title(),
+        obj = Grade.objects.filter(indicator=name_indicator_model._meta.get_field(str(indicator)).verbose_name.title(),
                                    category=category, trainer=user.profile.trainer)
         if obj:
             if value in range(getattr(obj[0], 'excellent'), getattr(obj[0], 'excellent_border')):
@@ -128,16 +128,18 @@ def change_user(request):
             form = ChangeSportsmenForm(request.POST)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             request.session['post_request'] = request.POST
             if Indicator.objects.filter(user=request.POST.get('user')) and Indicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
                 func_indicators_tuple, grade = get_result(Indicator, request, 'pulse_rate', 'index_of_rufe',
-                                                   'coefficient_of_endurance', 'blood_circulation',
-                                                   'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
-                context = {'form': form, 'pulse_rate': func_indicators_tuple[0], 'index_of_rufe': func_indicators_tuple[1],
-                           'coefficient_of_endurance': func_indicators_tuple[2], 'blood_circulation': func_indicators_tuple[3],
+                                                          'coefficient_of_endurance', 'blood_circulation',
+                                                          'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
+                context = {'form': form, 'pulse_rate': func_indicators_tuple[0],
+                           'index_of_rufe': func_indicators_tuple[1],
+                           'coefficient_of_endurance': func_indicators_tuple[2],
+                           'blood_circulation': func_indicators_tuple[3],
                            'orthostatic_test': func_indicators_tuple[4], 'clinostatic_test': func_indicators_tuple[5],
                            'rosenthal_test': func_indicators_tuple[6], 'grade_pulse_rate': grade[0],
                            'grade_index_of_rufe': grade[1], 'grade_coefficient_of_endurance': grade[2],
@@ -152,11 +154,14 @@ def change_user(request):
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.user):
                 func_indicators_tuple, grade = get_result_sportsmen(Indicator, request.user, request, 'pulse_rate',
-                                                             'index_of_rufe',
-                                                             'coefficient_of_endurance', 'blood_circulation',
-                                                             'orthostatic_test', 'clinostatic_test', 'rosenthal_test')
-                context = {'form': form, 'pulse_rate': func_indicators_tuple[0], 'index_of_rufe': func_indicators_tuple[1],
-                           'coefficient_of_endurance': func_indicators_tuple[2], 'blood_circulation': func_indicators_tuple[3],
+                                                                    'index_of_rufe',
+                                                                    'coefficient_of_endurance', 'blood_circulation',
+                                                                    'orthostatic_test', 'clinostatic_test',
+                                                                    'rosenthal_test')
+                context = {'form': form, 'pulse_rate': func_indicators_tuple[0],
+                           'index_of_rufe': func_indicators_tuple[1],
+                           'coefficient_of_endurance': func_indicators_tuple[2],
+                           'blood_circulation': func_indicators_tuple[3],
                            'orthostatic_test': func_indicators_tuple[4], 'clinostatic_test': func_indicators_tuple[5],
                            'rosenthal_test': func_indicators_tuple[6], 'grade_pulse_rate': grade[0],
                            'grade_index_of_rufe': grade[1], 'grade_coefficient_of_endurance': grade[2],
@@ -168,7 +173,7 @@ def change_user(request):
             form = ChangeSportsmenForm(post_request)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
 
         else:
             form = ForSportsmenForm(post_request)
@@ -190,12 +195,12 @@ def physical_indicator(request):
             form = ChangeSportsmenForm(request.POST)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             request.session['post_request'] = request.POST
             if PhysicalIndicator.objects.filter(user=request.POST.get('user')) and PhysicalIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
                          '-' + str(request.POST.get('date_day')), user=request.POST.get('user')):
-                physical_indicators_tuple = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
+                physical_indicators_tuple, grade = get_result(PhysicalIndicator, request, 'pullups', 'push_ups',
                                                        'sit_up', 'long_jump', 'acceleration', 'six_minute_run',
                                                        'shuttle_run',
                                                        'bridge', 'twine', 'blow_strength', 'flexibility',
@@ -214,7 +219,16 @@ def physical_indicator(request):
                                'flexibility': physical_indicators_tuple[10],
                                'coordination': physical_indicators_tuple[11],
                                'physical_fitness': physical_indicators_tuple[12],
-                               'endurance': physical_indicators_tuple[13]})
+                               'endurance': physical_indicators_tuple[13],
+                               'grade_pullups': grade[0],
+                               'grade_push_ups': grade[1], 'grade_sit_up': grade[2],
+                               'grade_long_jump': grade[3], 'grade_acceleration': grade[4],
+                               'grade_six_minute_run': grade[5], 'grade_shuttle_run': grade[6],
+                               'grade_bridge': grade[7], 'grade_twine': grade[8],
+                               'grade_blow_strength': grade[9], 'grade_flexibility': grade[10],
+                               'grade_coordination': grade[11], 'grade_physical_fitness': grade[12],
+                               'grade_endurance': grade[13]
+                               })
         else:
             form = ForSportsmenForm(request.POST)
             request.session['post_request'] = request.POST
@@ -248,7 +262,7 @@ def physical_indicator(request):
             form = ChangeSportsmenForm(post_request)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
         else:
             form = ForSportsmenForm(post_request)
     return render(request, 'table/PhysicalTraining.html',
@@ -277,7 +291,7 @@ def tactical_indicator(request):
             form = ChangeSportsmenForm(request.POST)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             request.session['post_request'] = request.POST
             if TacticaIndicator.objects.filter(user=request.POST.get('user')) and TacticaIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
@@ -360,7 +374,7 @@ def tactical_indicator(request):
             form = ChangeSportsmenForm(post_request)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
         else:
             form = ForSportsmenForm(post_request)
     return render(request, 'table/TacticalTraining.html', {'form': form,
@@ -387,7 +401,7 @@ def psy_indicator(request):
             form = ChangeSportsmenForm(request.POST)
             form.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             request.session['post_request'] = request.POST
             if PsyIndicator.objects.filter(user=request.POST.get('user')) and PsyIndicator.objects.filter(
                     date=str(request.POST.get('date_year')) + '-' + str(request.POST.get('date_month')) +
@@ -444,6 +458,7 @@ def grade_formatting(request):
         form_grade_formatting = ChangeCategoryForm()
 
     return render(request, 'grade_formatting.html', {'form_grade_formatting': form_grade_formatting})
+
 
 @login_required
 @permission_required('indicators.add_indicator')
@@ -528,7 +543,7 @@ def charts(request):
             form_date = ChartForm(request.POST)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             dataset = get_result_chart(Indicator, request, request.POST.get('user'), 'pulse_rate', 'index_of_rufe'
                                        , 'coefficient_of_endurance', 'blood_circulation', 'orthostatic_test',
                                        'clinostatic_test', 'rosenthal_test')
@@ -552,7 +567,7 @@ def charts(request):
             form_date = ChartForm(post_request_chart)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/charts.html', {'formdate': form_date})
@@ -567,7 +582,7 @@ def physical_charts(request):
             form_date = ChartForm(request.POST)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             dataset = get_result_chart(PhysicalIndicator, request, request.POST.get('user'), 'pullups', 'push_ups',
                                        'long_jump',
                                        'acceleration', 'six_minute_run', 'shuttle_run',
@@ -601,7 +616,7 @@ def physical_charts(request):
             form_date = ChartForm(post_request_chart)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/physical_charts.html', {'formdate': form_date})
@@ -616,7 +631,7 @@ def tactical_charts(request):
             form_date = ChartForm(request.POST)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             dataset = get_result_chart(TacticaIndicator, request, request.POST.get('user'),
                                        'versatility_technical_actions',
                                        'attack_efficiency', 'warfare_ratio',
@@ -653,7 +668,7 @@ def tactical_charts(request):
             form_date = ChartForm(post_request_chart)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/tactical_charts.html', {'formdate': form_date})
@@ -668,7 +683,7 @@ def psy_charts(request):
             form_date = ChartForm(request.POST)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
             dataset = get_result_chart(PsyIndicator, request, request.POST.get('user'), 'thermometer_test',
                                        'second_test',
                                        'persistence_ratio', 'courage_ratio', 'emotional_stability')
@@ -689,7 +704,7 @@ def psy_charts(request):
             form_date = ChartForm(post_request_chart)
             form_date.fields['user'] = forms.ModelChoiceField(
                 queryset=User.objects.filter(profile__trainer=request.user).select_related('profile'),
-            label='Спортсмен')
+                label='Спортсмен')
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/psy_charts.html', {'formdate': form_date})

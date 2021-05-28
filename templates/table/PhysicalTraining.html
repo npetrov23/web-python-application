@@ -25,66 +25,81 @@
                     <tr>
                       <th scope="col">Название показателя</th>
                       <th scope="col">Результат</th>
-                      <th scope="col">Оценка</th>
+                                            <th scope="col">Оценка
+                          {% if perms.indicators.add_indicator %}[<a href="{% url 'grade' %}">
+                              Настроить форматирование</a>]{% endif %}</th>
                     </tr>
                   </thead>
                 <tbody>
                 <tr>
                   <td scope="row">Подтягивания</td>
                   <td>{{ pullups }}</td>
+                    <td>{{ grade_pullups }}</td>
                 </tr>
                 <tr>
                   <td scope="row" >Отжимания</td>
                   <td>{{ push_ups }}</td>
-
+                    <td>{{ grade_push_ups }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Пресс - "складка"</td>
                   <td >{{ sit_up }}</td>
+                    <td>{{ grade_sit_up }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Прыжок в длину с места</td>
                   <td >{{ long_jump }}</td>
+                    <td>{{ grade_long_jump }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Ускорение 100м (c)</td>
                   <td >{{ acceleration }}</td>
+                    <td>{{ grade_acceleration }}</td>
                 </tr>
                 <tr>
                   <td scope="row">6-ти минутный бег (м)</td>
                   <td >{{ six_minute_run }}</td>
+                    <td>{{ grade_six_minute_run }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Челночный бег 4х9м (с)</td>
                   <td >{{ shuttle_run }}</td>
+                    <td>{{ grade_shuttle_run }}</td>
                 </tr>
                 <tr>
                   <td scope="row">"Мостик" (см)</td>
                   <td >{{ bridge }}</td>
+                    <td>{{ grade_bridge }}</td>
                 </tr>
                 <tr>
                   <td scope="row">"Шпагат" (см)</td>
                   <td >{{ twine }}</td>
+                    <td>{{ grade_twine }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Сила ударов (%)</td>
                   <td >{{ blow_strength }}</td>
+                    <td>{{ grade_blow_strength }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Выносливость (%)</td>
                   <td >{{ endurance }}</td>
+                    <td>{{ grade_endurance }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Гибкость (%)</td>
                   <td >{{ flexibility }}</td>
+                    <td>{{ grade_flexibility }}</td>
                 </tr>
                 <tr>
                   <td scope="row">Ккс (%)</td>
                   <td >{{ coordination }}</td>
+                    <td>{{ grade_coordination }}</td>
                 </tr>
                 <tr>
                   <td scope="row">КсФП (%)</td>
                   <td >{{ physical_fitness }}</td>
+                    <td>{{ grade_physical_fitness }}</td>
                 </tr>
               </tbody>
             </table>
