@@ -8,7 +8,7 @@ from django.dispatch import receiver
 class Indicator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Спортсмен')
     date = models.DateField(verbose_name='Дата норматива',default='2012-04-12')
-    pulse_rate = models.IntegerField(verbose_name='ЧПП', null=True, blank=True, default=0)
+    pulse_rate = models.IntegerField(verbose_name='ЧСС', null=True, blank=True, default=0)
     index_of_rufe = models.IntegerField(verbose_name='Проба Руффье', null=True, blank=True, default=0)
     coefficient_of_endurance = models.FloatField(verbose_name='Коэффициент выносливости',null=True, blank=True, default=0)
     blood_circulation = models.IntegerField(verbose_name='Коэффициент экономичности кровообращения',null=True, blank=True, default=0)
