@@ -74,7 +74,8 @@
         text: 'Проба Руффье'
     },
     xAxis: {
-        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
+        categories:  [{% for entry in dataset_date %}['{{ entry.date }}']
+            {% if not forloop.last %}, {% endif %}{% endfor %}]
     },
     yAxis: {
         title: {
@@ -91,7 +92,8 @@
     },
     series: [{
         name: 'Проба Руффье',
-        data: [{% for entry in dataset_index_of_rufe %}[{{ entry.index_of_rufe }}]{% if not forloop.last %}, {% endif %}{% endfor %}]
+        data: [{% for entry in dataset_index_of_rufe %}[{{ entry.index_of_rufe }}]
+            {% if not forloop.last %}, {% endif %}{% endfor %}]
     }]
 });
   Highcharts.chart('chart_coefficient_of_endurance', {

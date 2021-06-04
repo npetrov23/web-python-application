@@ -113,6 +113,7 @@ def get_result_chart(name_indicator_model, request, user, *indicators):
         request.POST.get('end_date_day'))
     done_indicators.append(
         name_indicator_model.objects.values('date').filter(user=user, date__range=[date_start, date_end]))
+
     for indicator in indicators:
         done_indicators.append(
             name_indicator_model.objects.values(indicator).filter(user=user, date__range=[date_start, date_end]))
