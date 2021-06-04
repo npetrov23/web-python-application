@@ -142,12 +142,3 @@ EMAIL_HOST_PASSWORD = 'webkaratepassword'
 
 RECAPTCHA_PUBLIC_KEY = '6LfUMhAbAAAAAAfdmLyJyADQQdFmV9MN8EN1nMFu'
 RECAPTCHA_PRIVATE_KEY = '6LfUMhAbAAAAANk601sKdBwcd76Y5wvoX-GxRtnM'
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 6,
-        }
-    },
-]

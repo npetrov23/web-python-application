@@ -3,11 +3,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 class Indicator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Спортсмен')
-    date = models.DateField(verbose_name='Дата норматива',default='2012-04-12')
+    date = models.DateField(verbose_name='Дата норматива', default=timezone.now)
     pulse_rate = models.IntegerField(verbose_name='ЧСС', null=True, blank=True, default=0)
     index_of_rufe = models.IntegerField(verbose_name='Проба Руффье', null=True, blank=True, default=0)
     coefficient_of_endurance = models.FloatField(verbose_name='Коэффициент выносливости',null=True, blank=True, default=0)
@@ -27,7 +28,7 @@ class Indicator(models.Model):
 
 class PhysicalIndicator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Спортсмен')
-    date = models.DateField(verbose_name='Дата норматива',default='2012-04-12')
+    date = models.DateField(verbose_name='Дата норматива', default=timezone.now)
     pullups = models.IntegerField(verbose_name='Подтягивания', null=True, blank=True, default=0)
     push_ups = models.IntegerField(verbose_name='Отжимания', null=True, blank=True, default=0)
     sit_up = models.IntegerField(verbose_name='Пресс "складка"', null=True, blank=True, default=0)
@@ -54,7 +55,7 @@ class PhysicalIndicator(models.Model):
 
 class TacticaIndicator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Спортсмен')
-    date = models.DateField(verbose_name='Дата норматива',default='2012-04-12')
+    date = models.DateField(verbose_name='Дата норматива', default=timezone.now)
     versatility_technical_actions = models.IntegerField(verbose_name='Коэффициент объема технических действий',
                                                         null=True, blank=True, default=0)
     attack_efficiency = models.IntegerField(verbose_name='Коэффициент эффективности атакующих действий', null=True,
@@ -83,7 +84,7 @@ class TacticaIndicator(models.Model):
 
 class PsyIndicator(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Спортсмен')
-    date = models.DateField(verbose_name='Дата норматива',default='2012-04-12')
+    date = models.DateField(verbose_name='Дата норматива', default=timezone.now)
     thermometer_test = models.FloatField(verbose_name='Тест "Градусник"', null=True, blank=True, default=0)
     second_test = models.FloatField(verbose_name='Тест "10 секунд"', null=True, blank=True, default=0)
     emotional_stability = models.FloatField(verbose_name='Коэффициент эмоциональной устойчивости', null=True,
