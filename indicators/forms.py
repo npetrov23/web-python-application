@@ -142,6 +142,7 @@ class PsyIndicatorForm(forms.ModelForm):
         }
 
 
+
 class ChartForm(forms.ModelForm):
     end_date = forms.DateField(widget = forms.SelectDateWidget, label='Конечная дата', initial=date.today)
 

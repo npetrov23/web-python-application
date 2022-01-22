@@ -21,4 +21,6 @@ urlpatterns = [
 
     url('register/', views.register, name='register'),
     url('new_sportsmen/', views.register_sportsmen, name='register_sportsmen'),
+
+    url(r'^instruction/$', views.instruction, name='instruction'),
 ]

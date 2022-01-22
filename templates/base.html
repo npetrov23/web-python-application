@@ -6,14 +6,34 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <style>
+       img {
+        border: 3px solid #00a8e1;
+           display: block;
+    margin-left: auto;
+    margin-right: auto;
+       }
+   .leftstr, .rightstr {
+    padding-left: 55px;
+    padding-right: 55px;
+    padding-top: 20px;
+    float: left; /* Обтекание справа */
+    width: 50%; /* Ширина текстового блока */
+   }
+   .rightstr {
+    text-align: right; /* Выравнивание по правому краю */
+   }
+    </style>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+      <p class="leftstr">Вы вошли, как <b>{{ user.username }}</b></p>
+      <p class="rightstr"><a href="{% url 'instruction' %}">[Инструкция]</a></p>
+      <div style="clear: left"></div>
 
     <div class="mx-5 p-1">
 
-        <p>Вы вошли, как <b>{{ user.username }}</b></p>
 
     {% block forms %}
 

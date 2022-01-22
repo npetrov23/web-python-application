@@ -41,7 +41,7 @@
         type: 'line',
     },
     title: {
-        text: 'ЧПП'
+        text: 'ЧCC'
     },
     xAxis: {
         categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
@@ -51,6 +51,18 @@
             text: 'Значение'
         }
     },
+     lang: {
+  	printChart: 'Распечатать',
+    downloadPNG: 'Сохранить в PNG',
+    downloadPDF: 'Сохранить в PDF'
+  },
+     exporting: {
+  	buttons: {
+    	contextButton: {
+      	menuItems: ["printChart", "separator", "downloadPNG", "downloadPDF"]
+      }
+    }
+  },
     plotOptions: {
         line: {
             dataLabels: {
@@ -133,6 +145,7 @@
     title: {
         text: 'Коэффициент экономичности кровообращения'
     },
+
     xAxis: {
         categories:  [{% for entry in dataset_date %}['{{ entry.date }}']{% if not forloop.last %}, {% endif %}{% endfor %}]
     },

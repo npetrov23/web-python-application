@@ -741,3 +741,7 @@ def psy_charts(request):
         else:
             form_date = SportsmenChartForm(post_request_chart)
     return render(request, 'charts/psy_charts.html', {'formdate': form_date})
+
+@login_required
+def instruction(request):
+    return render(request, 'instruction.html')
